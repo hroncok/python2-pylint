@@ -2,7 +2,7 @@
 
 Name:           pylint
 Version:        0.6.4
-Release:        3
+Release:        4
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
 Group:          Development/Debuggers
@@ -51,7 +51,8 @@ rm -rf $RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT%{_python_sitelib}/logilab/pylint/test
 # This file is provided by python-logilab-common
 rm -f $RPM_BUILD_ROOT%{_python_sitelib}/logilab/*.py
-
+mkdir -pm 755 $RPM_BUILD_ROOT%{_mandir}/man1
+install -pm 644 man/*.1 $RPM_BUILD_ROOT%{_mandir}/man1/
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -59,7 +60,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc doc/*.txt README ChangeLog TODO
+%doc doc/*.txt README ChangeLog TODO examples elisp
 %dir %{_python_sitelib}/logilab/pylint
 %dir %{_python_sitelib}/logilab/pylint/checkers
 %dir %{_python_sitelib}/logilab/pylint/reporters
@@ -71,6 +72,7 @@ rm -rf $RPM_BUILD_ROOT
 %ghost %{_python_sitelib}/logilab/pylint/*/*.pyo
 %{_bindir}/pylint
 %{_bindir}/symilar
+%{_mandir}/man?/*
 %exclude %{_python_sitelib}/logilab/pylint/gui.py*
 
 
@@ -83,6 +85,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May 09 2005 Konstantin Ryabitsev <icon@linux.duke.edu> - 0.6.4-4
+- Install the pylint.1 manfile.
+- Add examples and elisp dirs to docs.
+
 * Thu May 05 2005 Konstantin Ryabitsev <icon@linux.duke.edu> - 0.6.4-3
 - Only doc the .txt files.
 - Don't buildrequire python-logilab-common
