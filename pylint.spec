@@ -1,8 +1,8 @@
 %{!?_python_sitelib: %define _python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           pylint
-Version:        0.6.4
-Release:        4
+Version:        0.7.0
+Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
 Group:          Development/Debuggers
@@ -48,11 +48,10 @@ This package provides a gui tool for pylint written in tkinter.
 %install
 rm -rf $RPM_BUILD_ROOT
 %{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
-rm -rf $RPM_BUILD_ROOT%{_python_sitelib}/logilab/pylint/test
-# This file is provided by python-logilab-common
-rm -f $RPM_BUILD_ROOT%{_python_sitelib}/logilab/*.py
+rm -rf $RPM_BUILD_ROOT%{_python_sitelib}/pylint/test
 mkdir -pm 755 $RPM_BUILD_ROOT%{_mandir}/man1
 install -pm 644 man/*.1 $RPM_BUILD_ROOT%{_mandir}/man1/
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -61,30 +60,35 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc doc/*.txt README ChangeLog TODO examples elisp
-%dir %{_python_sitelib}/logilab/pylint
-%dir %{_python_sitelib}/logilab/pylint/checkers
-%dir %{_python_sitelib}/logilab/pylint/reporters
-%{_python_sitelib}/logilab/pylint/*.py
-%{_python_sitelib}/logilab/pylint/*.pyc
-%ghost %{_python_sitelib}/logilab/pylint/*.pyo
-%{_python_sitelib}/logilab/pylint/*/*.py
-%{_python_sitelib}/logilab/pylint/*/*.pyc
-%ghost %{_python_sitelib}/logilab/pylint/*/*.pyo
+%dir %{_python_sitelib}/pylint
+%dir %{_python_sitelib}/pylint/checkers
+%dir %{_python_sitelib}/pylint/reporters
+%{_python_sitelib}/pylint/*.py
+%{_python_sitelib}/pylint/*.pyc
+%ghost %{_python_sitelib}/pylint/*.pyo
+%{_python_sitelib}/pylint/*/*.py
+%{_python_sitelib}/pylint/*/*.pyc
+%ghost %{_python_sitelib}/pylint/*/*.pyo
 %{_bindir}/pylint
 %{_bindir}/symilar
 %{_mandir}/man?/*
-%exclude %{_python_sitelib}/logilab/pylint/gui.py*
+%exclude %{_python_sitelib}/pylint/gui.py*
 
 
 %files gui
 %defattr(-,root,root,-)
-%{_python_sitelib}/logilab/pylint/gui.py
-%{_python_sitelib}/logilab/pylint/gui.pyc
-%ghost %{_python_sitelib}/logilab/pylint/gui.pyo
+%{_python_sitelib}/pylint/gui.py
+%{_python_sitelib}/pylint/gui.pyc
+%ghost %{_python_sitelib}/pylint/gui.pyo
 %{_bindir}/pylint-gui
 
 
 %changelog
+* Mon Jun 13 2005 Konstantin Ryabitsev <icon@linux.duke.edu> - 0.7.0-1
+- Version 0.7.0
+- No longer in the logilab subdir
+- Disttagging
+
 * Mon May 09 2005 Konstantin Ryabitsev <icon@linux.duke.edu> - 0.6.4-4
 - Install the pylint.1 manfile.
 - Add examples and elisp dirs to docs.
