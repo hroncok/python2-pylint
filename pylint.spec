@@ -1,7 +1,7 @@
 %{!?_python_sitelib: %define _python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           pylint
-Version:        0.7.0
+Version:        0.8.1
 Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
@@ -14,7 +14,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  python-devel
 Requires:       python-abi = %(%{__python} -c "import sys; print sys.version[:3]")
-Requires:       python-logilab-common >= 0.9.3
+Requires:       python-logilab-common, python-astng
 
 %description
 Pylint is a python tool that checks if a module satisfy a coding standard. 
@@ -84,6 +84,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 13 2005 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.8.1-1
+- Version 0.8.1
+- Add dependency on python-astng
+- Drop artificial version requirement on python-logilab-common
+
 * Mon Jun 13 2005 Konstantin Ryabitsev <icon@linux.duke.edu> - 0.7.0-1
 - Version 0.7.0
 - No longer in the logilab subdir
