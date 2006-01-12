@@ -1,7 +1,7 @@
 %{!?_python_sitelib: %define _python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           pylint
-Version:        0.8.1
+Version:        0.9.0
 Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
@@ -59,7 +59,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc doc/*.txt README ChangeLog TODO examples elisp
+%doc doc/*.txt README ChangeLog TODO examples elisp COPYING
 %dir %{_python_sitelib}/pylint
 %dir %{_python_sitelib}/pylint/checkers
 %dir %{_python_sitelib}/pylint/reporters
@@ -84,6 +84,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jan 12 2006 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.9.0-1
+- Version 0.9.0
+- Add COPYING to docs
+
 * Sun Nov 13 2005 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.8.1-1
 - Version 0.8.1
 - Add dependency on python-astng
