@@ -1,7 +1,7 @@
 %{!?_python_sitelib: %define _python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           pylint
-Version:        0.11.0
+Version:        0.12.1
 Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
@@ -13,8 +13,7 @@ BuildArch:      noarch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  python-devel
-Requires:       python-abi = %(%{__python} -c "import sys; print sys.version[:3]")
-Requires:       python-logilab-common, python-astng
+Requires:       python-logilab-astng
 
 %description
 Pylint is a python tool that checks if a module satisfy a coding standard. 
@@ -60,30 +59,23 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc doc/*.txt README ChangeLog TODO examples elisp COPYING
-%dir %{_python_sitelib}/pylint
-%dir %{_python_sitelib}/pylint/checkers
-%dir %{_python_sitelib}/pylint/reporters
-%{_python_sitelib}/pylint/*.py
-%{_python_sitelib}/pylint/*.pyc
-%ghost %{_python_sitelib}/pylint/*.pyo
-%{_python_sitelib}/pylint/*/*.py
-%{_python_sitelib}/pylint/*/*.pyc
-%ghost %{_python_sitelib}/pylint/*/*.pyo
-%{_bindir}/pylint
-%{_bindir}/symilar
+%{_python_sitelib}/pylint
+%{_bindir}/*
 %{_mandir}/man?/*
 %exclude %{_python_sitelib}/pylint/gui.py*
-
+%exclude %{_bindir}/pylint-gui
 
 %files gui
 %defattr(-,root,root,-)
-%{_python_sitelib}/pylint/gui.py
-%{_python_sitelib}/pylint/gui.pyc
-%ghost %{_python_sitelib}/pylint/gui.pyo
+%{_python_sitelib}/pylint/gui.py*
 %{_bindir}/pylint-gui
 
 
 %changelog
+* Tue Sep 26 2006 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.12.1-1
+- Upstread 0.12.1
+- Require the renamed python-logilab-astng
+
 * Mon May 01 2006 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.11.0-0
 - Version 0.11.0
 
