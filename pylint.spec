@@ -1,7 +1,7 @@
 %{!?_python_sitelib: %define _python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           pylint
-Version:        0.12.1
+Version:        0.12.2
 Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
@@ -67,13 +67,18 @@ rm -rf $RPM_BUILD_ROOT
 
 %files gui
 %defattr(-,root,root,-)
+%doc COPYING
 %{_python_sitelib}/pylint/gui.py*
 %{_bindir}/pylint-gui
 
 
 %changelog
+* Sun Dec 17 2006 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.12.2-1
+- Upstream 0.12.2
+- Add COPYING to -gui
+
 * Tue Sep 26 2006 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.12.1-1
-- Upstread 0.12.1
+- Upstream 0.12.1
 - Require the renamed python-logilab-astng
 
 * Mon May 01 2006 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.11.0-0
