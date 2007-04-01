@@ -1,7 +1,7 @@
 %{!?_python_sitelib: %define _python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           pylint
-Version:        0.12.2
+Version:        0.13.1
 Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
@@ -73,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Apr 01 2007 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.13.1-1
+- Upstream 0.13.1
+
 * Sun Dec 17 2006 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.12.2-1
 - Upstream 0.12.2
 - Add COPYING to -gui
