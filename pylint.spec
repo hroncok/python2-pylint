@@ -1,12 +1,12 @@
 %{!?_python_sitelib: %define _python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           pylint
-Version:        0.13.1
+Version:        0.13.2
 Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
 Group:          Development/Debuggers
-License:        GPL
+License:        GPLv2+
 URL:            http://www.logilab.org/projects/pylint
 Source0:        ftp://ftp.logilab.org/pub/pylint/pylint-%{version}.tar.gz
 BuildArch:      noarch
@@ -50,6 +50,10 @@ rm -rf $RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT%{_python_sitelib}/pylint/test
 mkdir -pm 755 $RPM_BUILD_ROOT%{_mandir}/man1
 install -pm 644 man/*.1 $RPM_BUILD_ROOT%{_mandir}/man1/
+for FILE in README doc/*.txt TODO; do
+    iconv -f iso-8859-15 -t utf-8 $FILE > $FILE.utf8
+    mv -f $FILE.utf8 $FILE
+done
 
 
 %clean
@@ -73,6 +77,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 24 2007 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.13.2-1
+- Upstream 0.13.2
+- Adjust license to a more precise version
+- Fix docs to be valid utf-8
+
 * Sun Apr 01 2007 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.13.1-1
 - Upstream 0.13.1
 
