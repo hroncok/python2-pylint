@@ -1,7 +1,7 @@
 %{!?_python_sitelib: %define _python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           pylint
-Version:        0.13.2
+Version:        0.14.0
 Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
@@ -63,7 +63,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc doc/*.txt README ChangeLog TODO examples elisp COPYING
-%{_python_sitelib}/pylint
+%{_python_sitelib}/pylint*
 %{_bindir}/*
 %{_mandir}/man?/*
 %exclude %{_python_sitelib}/pylint/gui.py*
@@ -77,6 +77,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jan 17 2008 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.14.0-1
+- Upstream 0.14.0
+- Package the .egg-info files.
+
 * Mon Dec 24 2007 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.13.2-1
 - Upstream 0.13.2
 - Adjust license to a more precise version
