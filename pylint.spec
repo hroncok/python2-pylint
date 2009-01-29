@@ -1,7 +1,7 @@
 %{!?_python_sitelib: %define _python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           pylint
-Version:        0.15.2
+Version:        0.16.0
 Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jan 28 2009 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.16.0-1
+- Upstream 0.16.0
+
 * Tue Dec 30 2008 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.15.2-1
 - Upstream 0.15.2
 
