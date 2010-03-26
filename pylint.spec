@@ -1,7 +1,7 @@
 %{!?_python_sitelib: %define _python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           pylint
-Version:        0.18.1
+Version:        0.20.0
 Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
@@ -50,7 +50,7 @@ rm -rf $RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT%{_python_sitelib}/pylint/test
 mkdir -pm 755 $RPM_BUILD_ROOT%{_mandir}/man1
 install -pm 644 man/*.1 $RPM_BUILD_ROOT%{_mandir}/man1/
-for FILE in README doc/*.txt TODO; do
+for FILE in README doc/*.txt; do
     iconv -f iso-8859-15 -t utf-8 $FILE > $FILE.utf8
     mv -f $FILE.utf8 $FILE
 done
@@ -62,7 +62,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc doc/*.txt README ChangeLog TODO examples elisp COPYING
+%doc doc/*.txt README ChangeLog examples elisp COPYING
 %{_python_sitelib}/pylint*
 %{_bindir}/*
 %{_mandir}/man?/*
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Mar 25 2010 Brian C.Lane <bcl@redhat.com> - 0.20.0-1
+* Upstream 0.20.0
+
 * Sun Aug 30 2009 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.18.1-1
 - Upstream 0.18.1 (bugfixes and small enhancements)
 
