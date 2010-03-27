@@ -12,7 +12,7 @@ Source0:        ftp://ftp.logilab.org/pub/pylint/pylint-%{version}.tar.gz
 BuildArch:      noarch
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires:  python-devel
+BuildRequires:  python-devel python-setuptools
 Requires:       python-logilab-astng
 
 %description
@@ -77,8 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Mar 25 2010 Brian C.Lane <bcl@redhat.com> - 0.20.0-1
-* Upstream 0.20.0
+* Fri Mar 26 2010 Brian C.Lane <bcl@redhat.com> - 0.20.0-1
+- Upstream 0.20.0
+- Added python-setuptools to BuildRequires
 
 * Sun Aug 30 2009 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.18.1-1
 - Upstream 0.18.1 (bugfixes and small enhancements)
