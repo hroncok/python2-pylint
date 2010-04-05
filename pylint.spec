@@ -2,7 +2,7 @@
 
 Name:           pylint
 Version:        0.20.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
 Group:          Development/Debuggers
@@ -14,6 +14,10 @@ BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:  python-devel python-setuptools
 Requires:       python-logilab-astng
+
+# Sent upstream via python-projects list 20100405
+Patch0: pylint-disable-msg-cat-fix-bz500272.patch
+
 
 %description
 Pylint is a python tool that checks if a module satisfy a coding standard. 
@@ -38,7 +42,7 @@ This package provides a gui tool for pylint written in tkinter.
 
 %prep
 %setup -q
-
+%patch0 -p1
 
 %build
 %{__python} setup.py build
@@ -77,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Apr 05 2010 Brian C. Lane <bcl@redhat.com> - 0.20.0-2
+- Added patch for bug 500272 (exception with --disable-msg-cat)
+
 * Fri Mar 26 2010 Brian C.Lane <bcl@redhat.com> - 0.20.0-1
 - Upstream 0.20.0
 - Added python-setuptools to BuildRequires
