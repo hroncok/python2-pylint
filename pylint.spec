@@ -1,8 +1,8 @@
 %{!?_python_sitelib: %define _python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           pylint
-Version:        0.20.0
-Release:        2%{?dist}
+Version:        0.21.1
+Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
 Group:          Development/Debuggers
@@ -14,9 +14,6 @@ BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:  python-devel python-setuptools
 Requires:       python-logilab-astng
-
-# Sent upstream via python-projects list 20100405
-Patch0: pylint-disable-msg-cat-fix-bz500272.patch
 
 
 %description
@@ -42,7 +39,6 @@ This package provides a gui tool for pylint written in tkinter.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 %{__python} setup.py build
@@ -81,6 +77,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 08 2010 Brian C. Lane <bcl@redhat.com> - 0.21.1-1
+- Upstream 0.21.1
+- Removed patch for 500272, fixed upstream - http://www.logilab.org/ticket/22962
+
 * Mon Apr 05 2010 Brian C. Lane <bcl@redhat.com> - 0.20.0-2
 - Added patch for bug 500272 (exception with --disable-msg-cat)
 
