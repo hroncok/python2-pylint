@@ -2,7 +2,7 @@
 
 Name:           pylint
 Version:        0.21.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
 Group:          Development/Debuggers
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jul 21 2010 David Malcolm <dmalcolm@redhat.com> - 0.21.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Features/Python_2.7/MassRebuild
+
 * Thu Jul 08 2010 Brian C. Lane <bcl@redhat.com> - 0.21.1-1
 - Upstream 0.21.1
 - Removed patch for 500272, fixed upstream - http://www.logilab.org/ticket/22962
