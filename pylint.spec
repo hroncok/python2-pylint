@@ -2,7 +2,7 @@
 
 Name:           pylint
 Version:        0.22.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
 Group:          Development/Debuggers
@@ -13,7 +13,7 @@ BuildArch:      noarch
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:  python-devel python-setuptools
-Requires:       python-logilab-astng
+Requires:       python-logilab-astng >= 0.21.0
 
 
 %description
@@ -77,7 +77,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Nov 29 2010 Brian C. Lane <bcl@redhat.com> - 0.22.0
+* Mon Dec 06 2010 Brian C. Lane <bcl@redhat.com> - 0.22.0-2
+- Add version to requirement for python-logilab-astng so that updates will
+  work correctly.
+
+* Mon Nov 29 2010 Brian C. Lane <bcl@redhat.com> - 0.22.0-1
 - Upstream 0.22.0
 
 * Wed Jul 21 2010 David Malcolm <dmalcolm@redhat.com> - 0.21.1-2
