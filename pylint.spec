@@ -1,8 +1,8 @@
 %{!?_python_sitelib: %define _python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           pylint
-Version:        0.22.0
-Release:        3%{?dist}
+Version:        0.23.0
+Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
 Group:          Development/Debuggers
@@ -12,8 +12,9 @@ Source0:        ftp://ftp.logilab.org/pub/pylint/pylint-%{version}.tar.gz
 BuildArch:      noarch
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires:  python-devel python-setuptools
-Requires:       python-logilab-astng >= 0.21.0
+BuildRequires:  python-devel python-setuptools python-unittest2
+BuildRequires:  python-logilab-astng >= 0.21.1
+Requires:       python-logilab-astng >= 0.21.1
 
 
 %description
@@ -55,6 +56,8 @@ for FILE in README doc/*.txt; do
     mv -f $FILE.utf8 $FILE
 done
 
+%check
+%{__python} setup.py test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -77,6 +80,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Mar 28 2011 Brian C. Lane <bcl@redhat.com> - 0.23-0.1
+- Upstream 0.23.0
+- Add unit tests to spec
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.22.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
