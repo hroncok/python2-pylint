@@ -1,7 +1,7 @@
 %{!?_python_sitelib: %define _python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           pylint
-Version:        0.23.0
+Version:        0.24.0
 Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
@@ -13,8 +13,8 @@ BuildArch:      noarch
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:  python-devel python-setuptools python-unittest2
-BuildRequires:  python-logilab-astng >= 0.21.1
-Requires:       python-logilab-astng >= 0.21.1
+BuildRequires:  python-logilab-astng >= 0.22.0
+Requires:       python-logilab-astng >= 0.22.0
 
 
 %description
@@ -80,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 29 2011 Brian C. Lane <bcl@redhat.com> - 0.24.0-1
+- Upstream 0.24.0
+
 * Mon Mar 28 2011 Brian C. Lane <bcl@redhat.com> - 0.23-0.1
 - Upstream 0.23.0
 - Add unit tests to spec
