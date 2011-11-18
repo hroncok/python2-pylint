@@ -1,7 +1,7 @@
 %{!?_python_sitelib: %define _python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           pylint
-Version:        0.24.0
+Version:        0.25.0
 Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
@@ -80,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Nov 18 2011 Brian C. Lane <bcl@redhat.com> - 0.25.0-1
+- Upstream 0.25.0
+
 * Fri Jul 29 2011 Brian C. Lane <bcl@redhat.com> - 0.24.0-1
 - Upstream 0.24.0
 
