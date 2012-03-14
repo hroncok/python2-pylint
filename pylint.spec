@@ -1,8 +1,8 @@
 %{!?_python_sitelib: %define _python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           pylint
-Version:        0.25.0
-Release:        2%{?dist}
+Version:        0.25.1
+Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 
 Group:          Development/Debuggers
@@ -80,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 14 2012 Brian C. Lane <bcl@redhat.com> 0.25.1-1
+- Upstream 0.25.1
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.25.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
