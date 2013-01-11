@@ -1,10 +1,13 @@
-%{!?_python_sitelib: %define _python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+%if 0%{?fedora} > 12
+%global with_python3 0
+%else
+%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
+%endif
 
 Name:           pylint
-Version:        0.25.2
+Version:        0.26.0
 Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
-
 Group:          Development/Debuggers
 License:        GPLv2+
 URL:            http://www.logilab.org/projects/pylint
@@ -12,21 +15,43 @@ Source0:        ftp://ftp.logilab.org/pub/pylint/pylint-%{version}.tar.gz
 BuildArch:      noarch
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-BuildRequires:  python-devel python-setuptools python-unittest2
-BuildRequires:  python-logilab-astng >= 0.22.0
-Requires:       python-logilab-astng >= 0.22.0
+BuildRequires:  python-devel python-setuptools
+BuildRequires:  python-logilab-astng >= 0.24.0
+Requires:       python-logilab-astng >= 0.24.0
+Requires:       python-setuptools
 
+%if 0%{?with_python3}
+BuildRequires:  python3-devel python3-setuptools
+BuildRequires:  python3-logilab-astng >= 0.24.0
+%endif # with_python3
 
 %description
-Pylint is a python tool that checks if a module satisfy a coding standard. 
-Pylint can be seen as another PyChecker since nearly all tests you can do 
-with PyChecker can also be done with Pylint. But Pylint offers some more 
-features, like checking line-code's length, checking if variable names are 
-well-formed according to your coding standard, or checking if declared 
-interfaces are truly implemented, and much more. The big advantage with 
-Pylint is that it is highly configurable, customizable, and you can easily 
+Pylint is a python tool that checks if a module satisfy a coding standard.
+Pylint can be seen as another PyChecker since nearly all tests you can do
+with PyChecker can also be done with Pylint. But Pylint offers some more
+features, like checking line-code's length, checking if variable names are
+well-formed according to your coding standard, or checking if declared
+interfaces are truly implemented, and much more. The big advantage with
+Pylint is that it is highly configurable, customizable, and you can easily
 write a small plugin to add a personal feature.
 
+%if 0%{?with_python3}
+%package -n python3-pylint
+Summary:        Analyzes Python code looking for bugs and signs of poor quality
+Group:          Development/Debuggers
+Requires:       python3-logilab-astng >= 0.24.0
+Requires:       python3-setuptools
+
+%description -n python3-pylint
+Pylint is a python tool that checks if a module satisfy a coding standard.
+Pylint can be seen as another PyChecker since nearly all tests you can do
+with PyChecker can also be done with Pylint. But Pylint offers some more
+features, like checking line-code's length, checking if variable names are
+well-formed according to your coding standard, or checking if declared
+interfaces are truly implemented, and much more. The big advantage with
+Pylint is that it is highly configurable, customizable, and you can easily
+write a small plugin to add a personal feature.
+%endif # with_python3
 
 %package gui
 Summary:        Graphical Interface tool for Pylint
@@ -37,20 +62,64 @@ Requires:       tkinter
 %description gui
 This package provides a gui tool for pylint written in tkinter.
 
+%if 0%{?with_python3}
+%package -n python3-pylint-gui
+Summary:        Graphical Interface tool for Pylint
+Group:          Development/Debuggers
+Requires:       python3-pylint = %{version}-%{release}
+Requires:       tkinter
+
+%description -n python3-pylint-gui
+This package provides a gui tool for pylint written in tkinter.
+%endif # with_python3
 
 %prep
 %setup -q
 
+%if 0%{?with_python3}
+rm -rf %{py3dir}
+cp -a . %{py3dir}
+%endif # with_python3
+
 %build
 %{__python} setup.py build
 
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py build
+popd
+%endif # with_python3
 
 %install
-rm -rf $RPM_BUILD_ROOT
-%{__python} setup.py install -O1 --skip-build --root $RPM_BUILD_ROOT
-rm -rf $RPM_BUILD_ROOT%{_python_sitelib}/pylint/test
-mkdir -pm 755 $RPM_BUILD_ROOT%{_mandir}/man1
-install -pm 644 man/*.1 $RPM_BUILD_ROOT%{_mandir}/man1/
+rm -rf %{buildroot}
+
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py install -O1 --skip-build --root %{buildroot}
+rm -rf %{buildroot}%{python3_sitelib}/pylint/test
+mkdir -pm 755 %{buildroot}%{_mandir}/man1
+install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
+for FILE in README doc/*.txt; do
+    iconv -f iso-8859-15 -t utf-8 $FILE > $FILE.utf8
+    mv -f $FILE.utf8 $FILE
+done
+# Add python3- to the binaries
+for FILE in %{buildroot}%{_bindir}/*; do
+    NAME=$(basename $FILE)
+    mv $FILE %{buildroot}%{_bindir}/python3-$NAME
+done
+# Add python3- to the manpages
+for FILE in %{buildroot}%{_mandir}/man1/*; do
+    NAME=$(basename $FILE)
+    mv $FILE %{buildroot}%{_mandir}/man1/python3-$NAME
+done
+popd
+%endif # with_python3
+
+%{__python} setup.py install -O1 --skip-build --root %{buildroot}
+rm -rf %{buildroot}%{python_sitelib}/pylint/test
+mkdir -pm 755 %{buildroot}%{_mandir}/man1
+install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
 for FILE in README doc/*.txt; do
     iconv -f iso-8859-15 -t utf-8 $FILE > $FILE.utf8
     mv -f $FILE.utf8 $FILE
@@ -59,27 +128,56 @@ done
 %check
 %{__python} setup.py test
 
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py test
+popd
+%endif # with_python3
+
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %files
 %defattr(-,root,root,-)
 %doc doc/*.txt README ChangeLog examples elisp COPYING
-%{_python_sitelib}/pylint*
+%{python_sitelib}/pylint*
 %{_bindir}/*
 %{_mandir}/man?/*
-%exclude %{_python_sitelib}/pylint/gui.py*
+%exclude %{python_sitelib}/pylint/gui.py*
 %exclude %{_bindir}/pylint-gui
+%exclude %{_bindir}/python3-*
+%exclude %{_mandir}/man?/python3-*
 
 %files gui
 %defattr(-,root,root,-)
 %doc COPYING
-%{_python_sitelib}/pylint/gui.py*
+%{python_sitelib}/pylint/gui.py*
 %{_bindir}/pylint-gui
 
+%if 0%{?with_python3}
+%files -n python3-pylint
+%defattr(-,root,root,-)
+%doc doc/*.txt README ChangeLog examples elisp COPYING
+%{python3_sitelib}/pylint*
+%{_bindir}/python3-*
+%{_mandir}/man?/python3-*
+%exclude %{python3_sitelib}/pylint/gui.py*
+%exclude %{_bindir}/python3-pylint-gui
+
+%files -n python3-pylint-gui
+%defattr(-,root,root,-)
+%doc COPYING
+%{python3_sitelib}/pylint/gui.py*
+%{_bindir}/python3-pylint-gui
+%endif # with_python3
 
 %changelog
+* Thu Jan 10 2013 Brian C. Lane <bcl@redhat.com> 0.26.0-1
+- Upstream 0.26.0
+- Add python3-pylint and python3-pylint-gui subpackages. Not ready to turn it
+  on yet due to this upstream bug: http://www.logilab.org/ticket/110213
+
 * Fri Aug 03 2012 Brian C. Lane <bcl@redhat.com> 0.25.2-1
 - Upstream 0.25.2
 
