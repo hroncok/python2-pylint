@@ -4,25 +4,28 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
 %endif
 
+# This needs to be pulled from the source tarball
+%global commit e21be0620fa9
+
+
 Name:           pylint
-Version:        0.26.0
-Release:        3%{?dist}
+Version:        1.0.0
+Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
-URL:            http://www.logilab.org/projects/pylint
-Source0:        ftp://ftp.logilab.org/pub/pylint/pylint-%{version}.tar.gz
+URL:            http://www.pylint.org/
+Source0:        https://bitbucket.org/logilab/pylint/get/pylint-version-%{version}.tar.bz2
 BuildArch:      noarch
-BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
 BuildRequires:  python-devel python-setuptools
-BuildRequires:  python-logilab-astng >= 0.24.0
-Requires:       python-logilab-astng >= 0.24.0
+BuildRequires:  python-astroid >= 1.0.0
+Requires:       python-astroid >= 1.0.0
 Requires:       python-setuptools
 
 %if 0%{?with_python3}
 BuildRequires:  python3-devel python3-setuptools
-BuildRequires:  python3-logilab-astng >= 0.24.0
+BuildRequires:  python3-astroid >= 1.0.0
 %endif # with_python3
 
 %description
@@ -39,7 +42,7 @@ write a small plugin to add a personal feature.
 %package -n python3-pylint
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
-Requires:       python3-logilab-astng >= 0.24.0
+Requires:       python3-astroid >= 1.0.0
 Requires:       python3-setuptools
 
 %description -n python3-pylint
@@ -74,7 +77,7 @@ This package provides a gui tool for pylint written in tkinter.
 %endif # with_python3
 
 %prep
-%setup -q
+%setup -q -n logilab-pylint-%{commit}
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -91,18 +94,12 @@ popd
 %endif # with_python3
 
 %install
-rm -rf %{buildroot}
-
 %if 0%{?with_python3}
 pushd %{py3dir}
 %{__python3} setup.py install -O1 --skip-build --root %{buildroot}
 rm -rf %{buildroot}%{python3_sitelib}/pylint/test
 mkdir -pm 755 %{buildroot}%{_mandir}/man1
 install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
-for FILE in README doc/*.txt; do
-    iconv -f iso-8859-15 -t utf-8 $FILE > $FILE.utf8
-    mv -f $FILE.utf8 $FILE
-done
 # Add python3- to the binaries
 for FILE in %{buildroot}%{_bindir}/*; do
     NAME=$(basename $FILE)
@@ -120,10 +117,6 @@ popd
 rm -rf %{buildroot}%{python_sitelib}/pylint/test
 mkdir -pm 755 %{buildroot}%{_mandir}/man1
 install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
-for FILE in README doc/*.txt; do
-    iconv -f iso-8859-15 -t utf-8 $FILE > $FILE.utf8
-    mv -f $FILE.utf8 $FILE
-done
 
 %check
 %{__python} setup.py test
@@ -134,20 +127,14 @@ pushd %{py3dir}
 popd
 %endif # with_python3
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
 %defattr(-,root,root,-)
-%doc doc/*.txt README ChangeLog examples elisp COPYING
+%doc README ChangeLog examples elisp COPYING
 %{python_sitelib}/pylint*
 %{_bindir}/*
 %{_mandir}/man?/*
 %exclude %{python_sitelib}/pylint/gui.py*
 %exclude %{_bindir}/pylint-gui
-%exclude %{_bindir}/python3-*
-%exclude %{_mandir}/man?/python3-*
 
 %files gui
 %defattr(-,root,root,-)
@@ -173,6 +160,9 @@ rm -rf %{buildroot}
 %endif # with_python3
 
 %changelog
+* Tue Aug 13 2013 Brian C. Lane <bcl@redhat.com> 1.0.0-1
+- Upstream 1.0.0
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.26.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
