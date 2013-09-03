@@ -10,13 +10,15 @@
 
 Name:           pylint
 Version:        1.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
 URL:            http://www.pylint.org/
 Source0:        https://bitbucket.org/logilab/pylint/get/pylint-version-%{version}.tar.bz2
 BuildArch:      noarch
+
+Patch0:         0001-Add-upstream-patch-for-epylint-981859.patch
 
 BuildRequires:  python-devel python-setuptools
 BuildRequires:  python-astroid >= 1.0.0
@@ -78,6 +80,7 @@ This package provides a gui tool for pylint written in tkinter.
 
 %prep
 %setup -q -n logilab-pylint-%{commit}
+%patch0 -p1
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -160,6 +163,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Tue Sep 03 2013 Brian C. Lane <bcl@redhat.com> 1.0.0-2
+- Add upstream patch for epylint input validation (#981859)
+
 * Tue Aug 13 2013 Brian C. Lane <bcl@redhat.com> 1.0.0-1
 - Upstream 1.0.0
 
