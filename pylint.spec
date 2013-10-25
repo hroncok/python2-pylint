@@ -1,5 +1,5 @@
 %if 0%{?fedora} > 12
-%global with_python3 0
+%global with_python3 1
 %else
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
 %endif
@@ -10,7 +10,7 @@
 
 Name:           pylint
 Version:        1.0.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -20,13 +20,13 @@ BuildArch:      noarch
 
 Patch0:         0001-Add-upstream-patch-for-epylint-981859.patch
 
-BuildRequires:  python-devel python-setuptools
+BuildRequires:  python-devel python-setuptools python-tools
 BuildRequires:  python-astroid >= 1.0.0
 Requires:       python-astroid >= 1.0.0
 Requires:       python-setuptools
 
 %if 0%{?with_python3}
-BuildRequires:  python3-devel python3-setuptools
+BuildRequires:  python3-devel python3-setuptools python3-tools
 BuildRequires:  python3-astroid >= 1.0.0
 %endif # with_python3
 
@@ -148,7 +148,7 @@ popd
 %if 0%{?with_python3}
 %files -n python3-pylint
 %defattr(-,root,root,-)
-%doc doc/*.txt README ChangeLog examples elisp COPYING
+%doc README ChangeLog examples elisp COPYING
 %{python3_sitelib}/pylint*
 %{_bindir}/python3-*
 %{_mandir}/man?/python3-*
@@ -163,6 +163,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Thu Oct 24 2013 Brian C. Lane <bcl@redhat.com> 1.0.0-3
+- Switching on python3 support
+
 * Tue Sep 03 2013 Brian C. Lane <bcl@redhat.com> 1.0.0-2
 - Add upstream patch for epylint input validation (#981859)
 
