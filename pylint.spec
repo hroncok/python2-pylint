@@ -5,12 +5,12 @@
 %endif
 
 # This needs to be pulled from the source tarball
-%global commit e21be0620fa9
+%global commit a520db270ed7
 
 
 Name:           pylint
-Version:        1.0.0
-Release:        3%{?dist}
+Version:        1.1.0
+Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -18,16 +18,14 @@ URL:            http://www.pylint.org/
 Source0:        https://bitbucket.org/logilab/pylint/get/pylint-version-%{version}.tar.bz2
 BuildArch:      noarch
 
-Patch0:         0001-Add-upstream-patch-for-epylint-981859.patch
-
 BuildRequires:  python-devel python-setuptools python-tools
-BuildRequires:  python-astroid >= 1.0.0
-Requires:       python-astroid >= 1.0.0
+BuildRequires:  python-astroid >= 1.0.1
+Requires:       python-astroid >= 1.0.1
 Requires:       python-setuptools
 
 %if 0%{?with_python3}
 BuildRequires:  python3-devel python3-setuptools python3-tools
-BuildRequires:  python3-astroid >= 1.0.0
+BuildRequires:  python3-astroid >= 1.0.1
 %endif # with_python3
 
 %description
@@ -44,7 +42,7 @@ write a small plugin to add a personal feature.
 %package -n python3-pylint
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
-Requires:       python3-astroid >= 1.0.0
+Requires:       python3-astroid >= 1.0.1
 Requires:       python3-setuptools
 
 %description -n python3-pylint
@@ -80,7 +78,6 @@ This package provides a gui tool for pylint written in tkinter.
 
 %prep
 %setup -q -n logilab-pylint-%{commit}
-%patch0 -p1
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -163,6 +160,10 @@ popd
 %endif # with_python3
 
 %changelog
+* Thu Feb 27 2014 Brian C. Lane <bcl@redhat.com> 1.1.0-1
+- Upstream v1.1.0
+  Drop patch included in upstream
+
 * Thu Oct 24 2013 Brian C. Lane <bcl@redhat.com> 1.0.0-3
 - Switching on python3 support
 
