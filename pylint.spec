@@ -5,27 +5,27 @@
 %endif
 
 # This needs to be pulled from the source tarball
-%global commit a520db270ed7
+%global commit ee1190f87c82
 
 
 Name:           pylint
-Version:        1.1.0
+Version:        1.2
 Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
 URL:            http://www.pylint.org/
-Source0:        https://bitbucket.org/logilab/pylint/get/pylint-version-%{version}.tar.bz2
+Source0:        https://bitbucket.org/logilab/pylint/get/pylint-%{version}.tar.bz2
 BuildArch:      noarch
 
 BuildRequires:  python-devel python-setuptools python-tools
-BuildRequires:  python-astroid >= 1.0.1
-Requires:       python-astroid >= 1.0.1
+BuildRequires:  python-astroid >= 1.1
+Requires:       python-astroid >= 1.1
 Requires:       python-setuptools
 
 %if 0%{?with_python3}
 BuildRequires:  python3-devel python3-setuptools python3-tools
-BuildRequires:  python3-astroid >= 1.0.1
+BuildRequires:  python3-astroid >= 1.1
 %endif # with_python3
 
 %description
@@ -42,7 +42,7 @@ write a small plugin to add a personal feature.
 %package -n python3-pylint
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
-Requires:       python3-astroid >= 1.0.1
+Requires:       python3-astroid >= 1.1
 Requires:       python3-setuptools
 
 %description -n python3-pylint
@@ -160,6 +160,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Tue Apr 22 2014 Brian C. Lane <bcl@redhat.com> 1.2-1
+- Upstream v1.2
+
 * Thu Feb 27 2014 Brian C. Lane <bcl@redhat.com> 1.1.0-1
 - Upstream v1.1.0
   Drop patch included in upstream
