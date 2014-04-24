@@ -10,14 +10,15 @@
 
 Name:           pylint
 Version:        1.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
 URL:            http://www.pylint.org/
 Source0:        https://bitbucket.org/logilab/pylint/get/pylint-%{version}.tar.bz2
-BuildArch:      noarch
+Patch0:         init_hook.patch
 
+BuildArch:      noarch
 BuildRequires:  python-devel python-setuptools python-tools
 BuildRequires:  python-astroid >= 1.1
 Requires:       python-astroid >= 1.1
@@ -78,6 +79,7 @@ This package provides a gui tool for pylint written in tkinter.
 
 %prep
 %setup -q -n logilab-pylint-%{commit}
+%patch0 -p1
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -160,6 +162,10 @@ popd
 %endif # with_python3
 
 %changelog
+* Thu Apr 24 2014 Brian C. Lane <bcl@redhat.com> 1.2-2
+- Patch to Fix --init-hook typo (dshea)
+  https://bitbucket.org/logilab/pylint/issue/211/init-hook-no-longer-works
+
 * Tue Apr 22 2014 Brian C. Lane <bcl@redhat.com> 1.2-1
 - Upstream v1.2
 
