@@ -10,13 +10,14 @@
 
 Name:           pylint
 Version:        1.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
 URL:            http://www.pylint.org/
 Source0:        https://bitbucket.org/logilab/pylint/get/pylint-%{version}.tar.bz2
 Patch0:         init_hook.patch
+Patch1:         fix-explicit-check-of-python-script.patch
 
 BuildArch:      noarch
 BuildRequires:  python-devel python-setuptools python-tools
@@ -80,6 +81,7 @@ This package provides a gui tool for pylint written in tkinter.
 %prep
 %setup -q -n logilab-pylint-%{commit}
 %patch0 -p1
+%patch1 -p1
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -162,6 +164,10 @@ popd
 %endif # with_python3
 
 %changelog
+* Thu May 08 2014 Brian C. Lane <bcl@redhat.com> 1.2-3
+- fix explicit check of python script
+  https://bitbucket.org/logilab/pylint/issue/219/
+
 * Thu Apr 24 2014 Brian C. Lane <bcl@redhat.com> 1.2-2
 - Patch to Fix --init-hook typo (dshea)
   https://bitbucket.org/logilab/pylint/issue/211/init-hook-no-longer-works
