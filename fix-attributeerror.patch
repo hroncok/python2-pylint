@@ -1,0 +1,48 @@
+# HG changeset patch
+# User cpopa
+# Date 1398421037 -10800
+# Node ID 93babaf6bffc59a49c75319d9850086b4935edbc
+# Parent  0b8a45e6ff1a73e2b4dbbf4d2b7b45c596d95e9a
+Fix a potential AttributeError when checking for `reversed` arguments.
+
+diff --git a/checkers/base.py b/checkers/base.py
+--- a/checkers/base.py
++++ b/checkers/base.py
+@@ -785,11 +785,14 @@
+             if argument is None:
+                 # nothing was infered
+                 # try to see if we have iter()
+-                if (isinstance(node.args[0], astroid.CallFunc) and
+-                    node.args[0].func.name == 'iter'):
+-                     func = node.args[0].func.infer().next()
+-                     if is_builtin_object(func):
+-                         self.add_message('bad-reversed-sequence', node=node)
++                if isinstance(node.args[0], astroid.CallFunc):
++                    try:
++                        func = node.args[0].func.infer().next()
++                    except InferenceError:
++                        return
++                    if (getattr(func, 'name', None) == 'iter' and
++                        is_builtin_object(func)):
++                        self.add_message('bad-reversed-sequence', node=node)
+                 return
+ 
+             if isinstance(argument, astroid.Instance):
+diff --git a/test/input/func_bad_reversed_sequence.py b/test/input/func_bad_reversed_sequence.py
+--- a/test/input/func_bad_reversed_sequence.py
++++ b/test/input/func_bad_reversed_sequence.py
+@@ -37,7 +37,7 @@
+     """
+     return reversed(seq)
+ 
+-def test():
++def test(path):
+     """ test function """
+     seq = reversed()
+     seq = reversed(None)
+@@ -56,4 +56,5 @@
+     seq = reversed(deque([]))
+     seq = reversed("123")
+     seq = uninferable([1, 2, 3])
++    seq = reversed(path.split("/"))
+     return seq

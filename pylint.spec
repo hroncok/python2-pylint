@@ -10,7 +10,7 @@
 
 Name:           pylint
 Version:        1.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -18,6 +18,7 @@ URL:            http://www.pylint.org/
 Source0:        https://bitbucket.org/logilab/pylint/get/pylint-%{version}.tar.bz2
 Patch0:         init_hook.patch
 Patch1:         fix-explicit-check-of-python-script.patch
+Patch2:         fix-attributeerror.patch
 
 BuildArch:      noarch
 BuildRequires:  python-devel python-setuptools python-tools
@@ -82,6 +83,7 @@ This package provides a gui tool for pylint written in tkinter.
 %setup -q -n logilab-pylint-%{commit}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -164,6 +166,10 @@ popd
 %endif # with_python3
 
 %changelog
+* Fri May 09 2014 Brian C. Lane <bcl@redhat.com> 1.2-4
+- Fix a potential AttributeError when checking for `reversed` arguments.
+  https://bitbucket.org/logilab/pylint/commits/93babaf6bffc59a49c75319d9850086b4935edbc
+
 * Thu May 08 2014 Brian C. Lane <bcl@redhat.com> 1.2-3
 - fix explicit check of python script
   https://bitbucket.org/logilab/pylint/issue/219/
