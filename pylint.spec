@@ -10,7 +10,7 @@
 
 Name:           pylint
 Version:        1.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -166,6 +166,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Tue May 27 2014 Kalev Lember <kalevlember@gmail.com> - 1.2-5
+- Rebuilt for https://fedoraproject.org/wiki/Changes/Python_3.4
+
 * Fri May 09 2014 Brian C. Lane <bcl@redhat.com> 1.2-4
 - Fix a potential AttributeError when checking for `reversed` arguments.
   https://bitbucket.org/logilab/pylint/commits/93babaf6bffc59a49c75319d9850086b4935edbc
