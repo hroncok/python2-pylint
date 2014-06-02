@@ -10,7 +10,7 @@
 
 Name:           pylint
 Version:        1.2
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -29,6 +29,8 @@ Requires:       python-setuptools
 %if 0%{?with_python3}
 BuildRequires:  python3-devel python3-setuptools python3-tools
 BuildRequires:  python3-astroid >= 1.1
+Requires:       python3-astroid >= 1.1
+Requires:       python3-setuptools
 %endif # with_python3
 
 %description
@@ -166,6 +168,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Mon Jun 02 2014 Brian C. Lane <bcl@redhat.com> 1.2-6
+- Add python3-astroid and python3-setuptools as Requires (#1103479)
+
 * Tue May 27 2014 Kalev Lember <kalevlember@gmail.com> - 1.2-5
 - Rebuilt for https://fedoraproject.org/wiki/Changes/Python_3.4
 
