@@ -10,7 +10,7 @@
 
 Name:           pylint
 Version:        1.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -168,6 +168,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Mon Jun 02 2014 Brian C. Lane <bcl@redhat.com> 1.2-6
 - Add python3-astroid and python3-setuptools as Requires (#1103479)
 
