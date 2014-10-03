@@ -5,31 +5,28 @@
 %endif
 
 # This needs to be pulled from the source tarball
-%global commit ee1190f87c82
+%global commit 6a04e6b44ec8
 
 
 Name:           pylint
-Version:        1.2
-Release:        7%{?dist}
+Version:        1.3.1
+Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
 URL:            http://www.pylint.org/
 Source0:        https://bitbucket.org/logilab/pylint/get/pylint-%{version}.tar.bz2
-Patch0:         init_hook.patch
-Patch1:         fix-explicit-check-of-python-script.patch
-Patch2:         fix-attributeerror.patch
 
 BuildArch:      noarch
 BuildRequires:  python-devel python-setuptools python-tools
-BuildRequires:  python-astroid >= 1.1
-Requires:       python-astroid >= 1.1
+BuildRequires:  python-astroid >= 1.2.1
+Requires:       python-astroid >= 1.2.1
 Requires:       python-setuptools
 
 %if 0%{?with_python3}
 BuildRequires:  python3-devel python3-setuptools python3-tools
-BuildRequires:  python3-astroid >= 1.1
-Requires:       python3-astroid >= 1.1
+BuildRequires:  python3-astroid >= 1.2.1
+Requires:       python3-astroid >= 1.2.1
 Requires:       python3-setuptools
 %endif # with_python3
 
@@ -47,7 +44,7 @@ write a small plugin to add a personal feature.
 %package -n python3-pylint
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
-Requires:       python3-astroid >= 1.1
+Requires:       python3-astroid >= 1.2.1
 Requires:       python3-setuptools
 
 %description -n python3-pylint
@@ -83,9 +80,6 @@ This package provides a gui tool for pylint written in tkinter.
 
 %prep
 %setup -q -n logilab-pylint-%{commit}
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -168,6 +162,10 @@ popd
 %endif # with_python3
 
 %changelog
+* Fri Oct 03 2014 Brian C. Lane <bcl@redhat.com> 1.3.1-1
+- Upstream v1.3.1
+  Dropped patches included in upstream
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
