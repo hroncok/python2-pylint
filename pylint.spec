@@ -10,7 +10,7 @@
 
 Name:           pylint
 Version:        1.3.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -72,7 +72,7 @@ This package provides a gui tool for pylint written in tkinter.
 Summary:        Graphical Interface tool for Pylint
 Group:          Development/Debuggers
 Requires:       python3-pylint = %{version}-%{release}
-Requires:       tkinter
+Requires:       python3-tkinter
 
 %description -n python3-pylint-gui
 This package provides a gui tool for pylint written in tkinter.
@@ -162,6 +162,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Mon Oct 27 2014 Brian C. Lane <bcl@redhat.com> 1.3.1-2
+- python3-pylint-gui needs python3-tkinter
+
 * Fri Oct 03 2014 Brian C. Lane <bcl@redhat.com> 1.3.1-1
 - Upstream v1.3.1
   Dropped patches included in upstream
