@@ -10,7 +10,7 @@
 
 Name:           pylint
 Version:        1.4.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -19,12 +19,14 @@ Source0:        https://bitbucket.org/logilab/pylint/get/pylint-%{version}.tar.b
 
 BuildArch:      noarch
 BuildRequires:  python-devel python-setuptools python-tools
+BuildRequires:  python-six
 BuildRequires:  python-astroid >= 1.3.4
 Requires:       python-astroid >= 1.3.4
 Requires:       python-setuptools
 
 %if 0%{?with_python3}
 BuildRequires:  python3-devel python3-setuptools python3-tools
+BuildRequires:  python3-six
 BuildRequires:  python3-astroid >= 1.3.4
 Requires:       python3-astroid >= 1.3.4
 Requires:       python3-setuptools
@@ -162,6 +164,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Thu Jan 29 2015 Brian C. Lane <bcl@redhat.com> 1.4.1-2
+- Add python-six requirement
+
 * Wed Jan 28 2015 Brian C. Lane <bcl@redhat.com> 1.4.1-1
 - Upstream v1.4.1
 
