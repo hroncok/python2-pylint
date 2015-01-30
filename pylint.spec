@@ -10,7 +10,7 @@
 
 Name:           pylint
 Version:        1.4.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -139,6 +139,8 @@ popd
 %{_mandir}/man?/*
 %exclude %{python_sitelib}/pylint/gui.py*
 %exclude %{_bindir}/pylint-gui
+%exclude %{_bindir}/python3-*
+%exclude %{_mandir}/man?/python3-*
 
 %files gui
 %defattr(-,root,root,-)
@@ -164,6 +166,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Fri Jan 30 2015 Brian C. Lane <bcl@redhat.com> 1.4.1-3
+- Exclude the python3-* files from the python2 package
+
 * Thu Jan 29 2015 Brian C. Lane <bcl@redhat.com> 1.4.1-2
 - Add python-six requirement
 
