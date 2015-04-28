@@ -5,12 +5,12 @@
 %endif
 
 # This needs to be pulled from the source tarball
-%global commit 2b8634af6ac9
+%global commit b8ff6bf98468
 
 
 Name:           pylint
-Version:        1.4.1
-Release:        3%{?dist}
+Version:        1.4.3
+Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -20,15 +20,15 @@ Source0:        https://bitbucket.org/logilab/pylint/get/pylint-%{version}.tar.b
 BuildArch:      noarch
 BuildRequires:  python-devel python-setuptools python-tools
 BuildRequires:  python-six
-BuildRequires:  python-astroid >= 1.3.4
-Requires:       python-astroid >= 1.3.4
+BuildRequires:  python-astroid >= 1.3.6
+Requires:       python-astroid >= 1.3.6
 Requires:       python-setuptools
 
 %if 0%{?with_python3}
 BuildRequires:  python3-devel python3-setuptools python3-tools
 BuildRequires:  python3-six
-BuildRequires:  python3-astroid >= 1.3.4
-Requires:       python3-astroid >= 1.3.4
+BuildRequires:  python3-astroid >= 1.3.6
+Requires:       python3-astroid >= 1.3.6
 Requires:       python3-setuptools
 %endif # with_python3
 
@@ -46,7 +46,7 @@ write a small plugin to add a personal feature.
 %package -n python3-pylint
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
-Requires:       python3-astroid >= 1.3.4
+Requires:       python3-astroid >= 1.3.6
 Requires:       python3-setuptools
 
 %description -n python3-pylint
@@ -166,6 +166,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Tue Apr 28 2015 Brian C. Lane <bcl@redhat.com> 1.4.3-1
+- Upstream v1.4.3
+
 * Fri Jan 30 2015 Brian C. Lane <bcl@redhat.com> 1.4.1-3
 - Exclude the python3-* files from the python2 package
 
