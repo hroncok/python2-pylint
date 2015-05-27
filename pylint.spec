@@ -10,7 +10,7 @@
 
 Name:           pylint
 Version:        1.4.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -23,14 +23,7 @@ BuildRequires:  python-six
 BuildRequires:  python-astroid >= 1.3.6
 Requires:       python-astroid >= 1.3.6
 Requires:       python-setuptools
-
-%if 0%{?with_python3}
-BuildRequires:  python3-devel python3-setuptools python3-tools
-BuildRequires:  python3-six
-BuildRequires:  python3-astroid >= 1.3.6
-Requires:       python3-astroid >= 1.3.6
-Requires:       python3-setuptools
-%endif # with_python3
+Requires:       python-six
 
 %description
 Pylint is a python tool that checks if a module satisfy a coding standard.
@@ -46,8 +39,12 @@ write a small plugin to add a personal feature.
 %package -n python3-pylint
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
+BuildRequires:  python3-devel python3-setuptools python3-tools
+BuildRequires:  python3-six
+BuildRequires:  python3-astroid >= 1.3.6
 Requires:       python3-astroid >= 1.3.6
 Requires:       python3-setuptools
+Requires:       python3-six
 
 %description -n python3-pylint
 Pylint is a python tool that checks if a module satisfy a coding standard.
@@ -166,6 +163,10 @@ popd
 %endif # with_python3
 
 %changelog
+* Wed May 27 2015 Mathieu Bridon <bochecha@daitauha.fr> - 1.4.3-2
+- Drop python3 requirements from the python2 package.
+- Add missing requirement on six.
+
 * Tue Apr 28 2015 Brian C. Lane <bcl@redhat.com> 1.4.3-1
 - Upstream v1.4.3
 
