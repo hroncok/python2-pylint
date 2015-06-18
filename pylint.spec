@@ -10,7 +10,7 @@
 
 Name:           pylint
 Version:        1.4.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -163,6 +163,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Wed May 27 2015 Mathieu Bridon <bochecha@daitauha.fr> - 1.4.3-2
 - Drop python3 requirements from the python2 package.
 - Add missing requirement on six.
