@@ -4,36 +4,34 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
 %endif
 
-# This needs to be pulled from the source tarball
-%global commit b8ff6bf98468
-
-
 Name:           pylint
-Version:        1.4.3
-Release:        4%{?dist}
+Version:        1.5.1
+Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
 URL:            http://www.pylint.org/
-Source0:        https://bitbucket.org/logilab/pylint/get/pylint-%{version}.tar.bz2
+Source0:        https://github.com/PyCQA/pylint/archive/pylint-%{version}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  python-devel python-setuptools python-tools
 BuildRequires:  python-six
-BuildRequires:  python-astroid >= 1.3.6
-Requires:       python-astroid >= 1.3.6
+BuildRequires:  python-astroid >= 1.4.1
+Requires:       python-astroid >= 1.4.1
 Requires:       python-setuptools
 Requires:       python-six
 
 %description
-Pylint is a python tool that checks if a module satisfy a coding standard.
-Pylint can be seen as another PyChecker since nearly all tests you can do
-with PyChecker can also be done with Pylint. But Pylint offers some more
-features, like checking line-code's length, checking if variable names are
-well-formed according to your coding standard, or checking if declared
-interfaces are truly implemented, and much more. The big advantage with
-Pylint is that it is highly configurable, customizable, and you can easily
-write a small plugin to add a personal feature.
+Pylint is a Python source code analyzer which looks for programming
+errors, helps enforcing a coding standard and sniffs for some code
+smells (as defined in Martin Fowler's Refactoring book).
+Pylint can be seen as another PyChecker since nearly all tests you
+can do with PyChecker can also be done with Pylint. However, Pylint
+offers some more features, like checking length of lines of code,
+checking if variable names are well-formed according to your coding
+standard, or checking if declared interfaces are truly implemented,
+and much more.
+Additionally, it is possible to write plugins to add your own checks.
 
 %if 0%{?with_python3}
 %package -n python3-pylint
@@ -41,20 +39,22 @@ Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 BuildRequires:  python3-devel python3-setuptools python3-tools
 BuildRequires:  python3-six
-BuildRequires:  python3-astroid >= 1.3.6
-Requires:       python3-astroid >= 1.3.6
+BuildRequires:  python3-astroid >= 1.4.1
+Requires:       python3-astroid >= 1.4.1
 Requires:       python3-setuptools
 Requires:       python3-six
 
 %description -n python3-pylint
-Pylint is a python tool that checks if a module satisfy a coding standard.
-Pylint can be seen as another PyChecker since nearly all tests you can do
-with PyChecker can also be done with Pylint. But Pylint offers some more
-features, like checking line-code's length, checking if variable names are
-well-formed according to your coding standard, or checking if declared
-interfaces are truly implemented, and much more. The big advantage with
-Pylint is that it is highly configurable, customizable, and you can easily
-write a small plugin to add a personal feature.
+Pylint is a Python source code analyzer which looks for programming
+errors, helps enforcing a coding standard and sniffs for some code
+smells (as defined in Martin Fowler's Refactoring book).
+Pylint can be seen as another PyChecker since nearly all tests you
+can do with PyChecker can also be done with Pylint. However, Pylint
+offers some more features, like checking length of lines of code,
+checking if variable names are well-formed according to your coding
+standard, or checking if declared interfaces are truly implemented,
+and much more.
+Additionally, it is possible to write plugins to add your own checks.
 %endif # with_python3
 
 %package gui
@@ -78,7 +78,7 @@ This package provides a gui tool for pylint written in tkinter.
 %endif # with_python3
 
 %prep
-%setup -q -n logilab-pylint-%{commit}
+%setup -q -n pylint-pylint-%{version}
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -119,15 +119,6 @@ rm -rf %{buildroot}%{python_sitelib}/pylint/test
 mkdir -pm 755 %{buildroot}%{_mandir}/man1
 install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
 
-%check
-%{__python} setup.py test
-
-%if 0%{?with_python3}
-pushd %{py3dir}
-%{__python3} setup.py test
-popd
-%endif # with_python3
-
 %files
 %defattr(-,root,root,-)
 %doc README ChangeLog examples elisp COPYING
@@ -163,6 +154,11 @@ popd
 %endif # with_python3
 
 %changelog
+* Thu Dec 10 2015 Brian C. Lane <bcl@redhat.com> 1.5.1-1
+- Upstream v1.5.1
+- Remove %check section, it does not work due to unpackaged requirements.
+- Update description from the package's __pkginfo__.py file.
+
 * Tue Nov 10 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.3-4
 - Rebuilt for https://fedoraproject.org/wiki/Changes/python3.5
 
