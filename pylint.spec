@@ -5,7 +5,7 @@
 %endif
 
 Name:           pylint
-Version:        1.5.1
+Version:        1.5.2
 Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
@@ -16,8 +16,8 @@ Source0:        https://github.com/PyCQA/pylint/archive/pylint-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  python-devel python-setuptools python-tools
 BuildRequires:  python-six
-BuildRequires:  python-astroid >= 1.4.1
-Requires:       python-astroid >= 1.4.1
+BuildRequires:  python-astroid >= 1.4.3
+Requires:       python-astroid >= 1.4.3
 Requires:       python-setuptools
 Requires:       python-six
 
@@ -39,8 +39,8 @@ Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 BuildRequires:  python3-devel python3-setuptools python3-tools
 BuildRequires:  python3-six
-BuildRequires:  python3-astroid >= 1.4.1
-Requires:       python3-astroid >= 1.4.1
+BuildRequires:  python3-astroid >= 1.4.3
+Requires:       python3-astroid >= 1.4.3
 Requires:       python3-setuptools
 Requires:       python3-six
 
@@ -121,7 +121,8 @@ install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
 
 %files
 %defattr(-,root,root,-)
-%doc README ChangeLog examples elisp COPYING
+%doc README.rst ChangeLog examples elisp
+%license COPYING
 %{python_sitelib}/pylint*
 %{_bindir}/*
 %{_mandir}/man?/*
@@ -132,14 +133,15 @@ install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
 
 %files gui
 %defattr(-,root,root,-)
-%doc COPYING
+%license COPYING
 %{python_sitelib}/pylint/gui.py*
 %{_bindir}/pylint-gui
 
 %if 0%{?with_python3}
 %files -n python3-pylint
 %defattr(-,root,root,-)
-%doc README ChangeLog examples elisp COPYING
+%doc README.rst ChangeLog examples elisp
+%license COPYING
 %{python3_sitelib}/pylint*
 %{_bindir}/python3-*
 %{_mandir}/man?/python3-*
@@ -148,12 +150,15 @@ install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
 
 %files -n python3-pylint-gui
 %defattr(-,root,root,-)
-%doc COPYING
+%license COPYING
 %{python3_sitelib}/pylint/gui.py*
 %{_bindir}/python3-pylint-gui
 %endif # with_python3
 
 %changelog
+* Mon Jan 04 2016 Brian C. Lane <bcl@redhat.com> 1.5.2-1
+- Upstream v1.5.2
+
 * Thu Dec 10 2015 Brian C. Lane <bcl@redhat.com> 1.5.1-1
 - Upstream v1.5.1
 - Remove %check section, it does not work due to unpackaged requirements.
