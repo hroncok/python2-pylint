@@ -5,7 +5,7 @@
 %endif
 
 Name:           pylint
-Version:        1.5.2
+Version:        1.5.4
 Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
@@ -156,6 +156,9 @@ install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
 %endif # with_python3
 
 %changelog
+* Mon Jan 18 2016 Brian C. Lane <bcl@redhat.com> 1.5.4-1
+- Upstream v1.5.4
+
 * Mon Jan 04 2016 Brian C. Lane <bcl@redhat.com> 1.5.2-1
 - Upstream v1.5.2
 
