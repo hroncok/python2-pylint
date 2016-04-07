@@ -5,8 +5,8 @@
 %endif
 
 Name:           pylint
-Version:        1.5.4
-Release:        2%{?dist}
+Version:        1.5.5
+Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -16,8 +16,8 @@ Source0:        https://github.com/PyCQA/pylint/archive/pylint-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  python-devel python-setuptools python-tools
 BuildRequires:  python-six
-BuildRequires:  python-astroid >= 1.4.3
-Requires:       python-astroid >= 1.4.3
+BuildRequires:  python-astroid >= 1.4.5
+Requires:       python-astroid >= 1.4.5
 Requires:       python-setuptools
 Requires:       python-six
 
@@ -39,8 +39,8 @@ Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 BuildRequires:  python3-devel python3-setuptools python3-tools
 BuildRequires:  python3-six
-BuildRequires:  python3-astroid >= 1.4.3
-Requires:       python3-astroid >= 1.4.3
+BuildRequires:  python3-astroid >= 1.4.5
+Requires:       python3-astroid >= 1.4.5
 Requires:       python3-setuptools
 Requires:       python3-six
 
@@ -156,6 +156,9 @@ install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
 %endif # with_python3
 
 %changelog
+* Thu Apr 07 2016 Brian C. Lane <bcl@redhat.com> 1.5.5-1
+- Upstream v1.5.5
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
