@@ -6,7 +6,7 @@
 
 Name:           pylint
 Version:        1.5.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -156,6 +156,9 @@ install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
 %endif # with_python3
 
 %changelog
+* Tue Jul 19 2016 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.5-2
+- https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
+
 * Thu Apr 07 2016 Brian C. Lane <bcl@redhat.com> 1.5.5-1
 - Upstream v1.5.5
 
