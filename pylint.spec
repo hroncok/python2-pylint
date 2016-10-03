@@ -5,7 +5,7 @@
 %endif
 
 Name:           pylint
-Version:        1.5.6
+Version:        1.6.4
 Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
@@ -20,6 +20,10 @@ BuildRequires:  python-astroid >= 1.4.5
 Requires:       python-astroid >= 1.4.5
 Requires:       python-setuptools
 Requires:       python-six
+Requires:       python-mccabe
+Requires:	python-isort
+Requires:	python2-backports-functools_lru_cache
+Requires:	python2-configparser
 
 %description
 Pylint is a Python source code analyzer which looks for programming
@@ -43,6 +47,8 @@ BuildRequires:  python3-astroid >= 1.4.5
 Requires:       python3-astroid >= 1.4.5
 Requires:       python3-setuptools
 Requires:       python3-six
+Requires:       python3-mccabe
+Requires:	python3-isort
 
 %description -n python3-pylint
 Pylint is a Python source code analyzer which looks for programming
@@ -156,6 +162,9 @@ install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
 %endif # with_python3
 
 %changelog
+* Mon Oct 03 2016 Jon Ciesla <limburgher@gmail.com> - 1.6.4-1
+- Upstream v1.6.4
+
 * Fri Jul 29 2016 Jon Ciesla <limburgher@gmail.com> - 1.5.6-1
 - Upstream v1.5.6
 
