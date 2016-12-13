@@ -6,7 +6,7 @@
 
 Name:           pylint
 Version:        1.6.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -162,6 +162,9 @@ install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
 %endif # with_python3
 
 %changelog
+* Tue Dec 13 2016 Charalampos Stratakis <cstratak@redhat.com> - 1.6.4-2
+- Rebuild for Python 3.6
+
 * Mon Oct 03 2016 Jon Ciesla <limburgher@gmail.com> - 1.6.4-1
 - Upstream v1.6.4
 
