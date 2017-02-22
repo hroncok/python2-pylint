@@ -5,8 +5,8 @@
 %endif
 
 Name:           pylint
-Version:        1.6.4
-Release:        3%{?dist}
+Version:        1.6.5
+Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -162,6 +162,9 @@ install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
 %endif # with_python3
 
 %changelog
+* Wed Feb 22 2017 Christian Dersch <lupinix@mailbox.org> - 1.6.5-1
+- new version
+
 * Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.6.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
