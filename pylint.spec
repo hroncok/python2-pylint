@@ -1,12 +1,8 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
-%endif
 
 Name:           pylint
 Version:        1.6.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -14,16 +10,20 @@ URL:            http://www.pylint.org/
 Source0:        https://github.com/PyCQA/pylint/archive/pylint-%{version}.tar.gz
 
 BuildArch:      noarch
-BuildRequires:  python-devel python-setuptools python-tools
+BuildRequires:  python2-devel
+BuildRequires:  python-setuptools
 BuildRequires:  python-six
 BuildRequires:  python-astroid >= 1.4.5
+# For tests
+BuildRequires:  python2-isort
+BuildRequires:  python2-backports-functools_lru_cache
 Requires:       python-astroid >= 1.4.5
 Requires:       python-setuptools
 Requires:       python-six
-Requires:       python-mccabe
-Requires:	python-isort
-Requires:	python2-backports-functools_lru_cache
-Requires:	python2-configparser
+Requires:       python2-mccabe
+Requires:       python2-isort
+Requires:       python2-backports-functools_lru_cache
+Requires:       python2-configparser
 
 %description
 Pylint is a Python source code analyzer which looks for programming
@@ -38,19 +38,21 @@ and much more.
 Additionally, it is possible to write plugins to add your own checks.
 
 %if 0%{?with_python3}
-%package -n python3-pylint
+%package -n python%{python3_pkgversion}-pylint
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
-BuildRequires:  python3-devel python3-setuptools python3-tools
-BuildRequires:  python3-six
-BuildRequires:  python3-astroid >= 1.4.5
-Requires:       python3-astroid >= 1.4.5
-Requires:       python3-setuptools
-Requires:       python3-six
-Requires:       python3-mccabe
-Requires:	python3-isort
+BuildRequires:  python%{python3_pkgversion}-devel python%{python3_pkgversion}-setuptools python%{python3_pkgversion}-tools
+BuildRequires:  python%{python3_pkgversion}-six
+BuildRequires:  python%{python3_pkgversion}-astroid >= 1.4.5
+# For tests
+BuildRequires:  python%{python3_pkgversion}-isort
+Requires:       python%{python3_pkgversion}-astroid >= 1.4.5
+Requires:       python%{python3_pkgversion}-setuptools
+Requires:       python%{python3_pkgversion}-six
+Requires:       python%{python3_pkgversion}-mccabe
+Requires:       python%{python3_pkgversion}-isort
 
-%description -n python3-pylint
+%description -n python%{python3_pkgversion}-pylint
 Pylint is a Python source code analyzer which looks for programming
 errors, helps enforcing a coding standard and sniffs for some code
 smells (as defined in Martin Fowler's Refactoring book).
@@ -73,95 +75,100 @@ Requires:       tkinter
 This package provides a gui tool for pylint written in tkinter.
 
 %if 0%{?with_python3}
-%package -n python3-pylint-gui
+%package -n python%{python3_pkgversion}-pylint-gui
 Summary:        Graphical Interface tool for Pylint
 Group:          Development/Debuggers
-Requires:       python3-pylint = %{version}-%{release}
-Requires:       python3-tkinter
+Requires:       python%{python3_pkgversion}-pylint = %{version}-%{release}
+Requires:       python%{python3_pkgversion}-tkinter
 
-%description -n python3-pylint-gui
+%description -n python%{python3_pkgversion}-pylint-gui
 This package provides a gui tool for pylint written in tkinter.
 %endif # with_python3
 
 %prep
 %setup -q -n pylint-pylint-%{version}
 
-%if 0%{?with_python3}
-rm -rf %{py3dir}
-cp -a . %{py3dir}
-%endif # with_python3
-
 %build
-%{__python} setup.py build
+%py2_build
 
 %if 0%{?with_python3}
-pushd %{py3dir}
-%{__python3} setup.py build
-popd
+%py3_build
 %endif # with_python3
 
 %install
 %if 0%{?with_python3}
-pushd %{py3dir}
-%{__python3} setup.py install -O1 --skip-build --root %{buildroot}
+%py3_install
 rm -rf %{buildroot}%{python3_sitelib}/pylint/test
 mkdir -pm 755 %{buildroot}%{_mandir}/man1
 install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
-# Add python3- to the binaries
+# Add python%{python3_pkgversion}- to the binaries
 for FILE in %{buildroot}%{_bindir}/*; do
     NAME=$(basename $FILE)
-    mv $FILE %{buildroot}%{_bindir}/python3-$NAME
+    mv $FILE %{buildroot}%{_bindir}/python%{python3_pkgversion}-$NAME
 done
-# Add python3- to the manpages
+# Add python%{python3_pkgversion}- to the manpages
 for FILE in %{buildroot}%{_mandir}/man1/*; do
     NAME=$(basename $FILE)
-    mv $FILE %{buildroot}%{_mandir}/man1/python3-$NAME
+    mv $FILE %{buildroot}%{_mandir}/man1/python%{python3_pkgversion}-$NAME
 done
-popd
 %endif # with_python3
 
-%{__python} setup.py install -O1 --skip-build --root %{buildroot}
-rm -rf %{buildroot}%{python_sitelib}/pylint/test
+%py2_install
+rm -rf %{buildroot}%{python2_sitelib}/pylint/test
 mkdir -pm 755 %{buildroot}%{_mandir}/man1
 install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
 
+%check
+export PYTHONPATH=%{buildroot}%{python2_sitelib}
+bin/pylint -rn --rcfile=pylintrc --load-plugins=pylint.extensions.docparams, pylint.extensions.mccabe pylint || :
+%{__python2} -Wi -m unittest discover -s pylint/test || :
+%if 0%{?with_python3}
+export PYTHONPATH=%{buildroot}%{python3_sitelib}
+%{__python3} bin/pylint -rn --rcfile=pylintrc --load-plugins=pylint.extensions.docparams, pylint.extensions.mccabe pylint || :
+%{__python3} -Wi -m unittest discover -s pylint/test || :
+%endif
+
 %files
-%defattr(-,root,root,-)
 %doc README.rst ChangeLog examples elisp
 %license COPYING
-%{python_sitelib}/pylint*
+%{python2_sitelib}/pylint*
 %{_bindir}/*
 %{_mandir}/man?/*
-%exclude %{python_sitelib}/pylint/gui.py*
+%exclude %{python2_sitelib}/pylint/gui.py*
 %exclude %{_bindir}/pylint-gui
-%exclude %{_bindir}/python3-*
-%exclude %{_mandir}/man?/python3-*
+%exclude %{_bindir}/python%{python3_pkgversion}-*
+%exclude %{_mandir}/man?/python%{python3_pkgversion}-*
 
 %files gui
-%defattr(-,root,root,-)
 %license COPYING
-%{python_sitelib}/pylint/gui.py*
+%{python2_sitelib}/pylint/gui.py*
 %{_bindir}/pylint-gui
 
 %if 0%{?with_python3}
-%files -n python3-pylint
-%defattr(-,root,root,-)
+%files -n python%{python3_pkgversion}-pylint
 %doc README.rst ChangeLog examples elisp
 %license COPYING
 %{python3_sitelib}/pylint*
-%{_bindir}/python3-*
-%{_mandir}/man?/python3-*
+%{_bindir}/python%{python3_pkgversion}-*
+%{_mandir}/man?/python%{python3_pkgversion}-*
 %exclude %{python3_sitelib}/pylint/gui.py*
-%exclude %{_bindir}/python3-pylint-gui
+%exclude %{python3_sitelib}/pylint/__pycache__/gui.*
+%exclude %{_bindir}/python%{python3_pkgversion}-pylint-gui
 
-%files -n python3-pylint-gui
-%defattr(-,root,root,-)
+%files -n python%{python3_pkgversion}-pylint-gui
 %license COPYING
 %{python3_sitelib}/pylint/gui.py*
-%{_bindir}/python3-pylint-gui
+%{python3_sitelib}/pylint/__pycache__/gui.*
+%{_bindir}/python%{python3_pkgversion}-pylint-gui
 %endif # with_python3
 
 %changelog
+* Mon Mar 13 2017 Orion Poplawski <orion@cora.nwra.com> - 1.6.5-2
+- Enable python3 build for EPEL
+- Include python3-pylint-gui __pycache__ files in gui package (bug #1422609)
+- Cleanup spec
+- Run tests, but they currently fail
+
 * Wed Feb 22 2017 Christian Dersch <lupinix@mailbox.org> - 1.6.5-1
 - new version
 
