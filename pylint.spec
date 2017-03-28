@@ -2,7 +2,7 @@
 
 Name:           pylint
 Version:        1.6.5
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -17,13 +17,12 @@ BuildRequires:  python-astroid >= 1.4.5
 # For tests
 BuildRequires:  python2-isort
 BuildRequires:  python2-backports-functools_lru_cache
-Requires:       python-astroid >= 1.4.5
-Requires:       python-setuptools
-Requires:       python-six
-Requires:       python2-mccabe
-Requires:       python2-isort
-Requires:       python2-backports-functools_lru_cache
-Requires:       python2-configparser
+# Python 3 is default for Fedora 26+
+%if 0%{?fedora} >= 26
+Requires:       python%{python3_pkgversion}-%{name} = %{version}-%{release}
+%else
+Requires:       python2-%{name} = %{version}-%{release}
+%endif
 
 %description
 Pylint is a Python source code analyzer which looks for programming
@@ -36,6 +35,51 @@ checking if variable names are well-formed according to your coding
 standard, or checking if declared interfaces are truly implemented,
 and much more.
 Additionally, it is possible to write plugins to add your own checks.
+
+%package gui
+Summary:        Graphical Interface tool for Pylint
+Group:          Development/Debuggers
+Requires:       %{name} = %{version}-%{release}
+%if 0%{?fedora} >= 26
+Requires:       python%{python3_pkgversion}-%{name}-gui = %{version}-%{release}
+%else
+Requires:       python2-%{name}-gui = %{version}-%{release}
+%endif
+
+%description gui
+This package provides a gui tool for pylint written in tkinter.
+
+%package -n python2-pylint
+Summary:        Analyzes Python code looking for bugs and signs of poor quality
+Group:          Development/Debuggers
+Requires:       python-astroid >= 1.4.5
+Requires:       python-setuptools
+Requires:       python-six
+Requires:       python2-mccabe
+Requires:       python2-isort
+Requires:       python2-backports-functools_lru_cache
+Requires:       python2-configparser
+
+%description -n python2-pylint
+Pylint is a Python source code analyzer which looks for programming
+errors, helps enforcing a coding standard and sniffs for some code
+smells (as defined in Martin Fowler's Refactoring book).
+Pylint can be seen as another PyChecker since nearly all tests you
+can do with PyChecker can also be done with Pylint. However, Pylint
+offers some more features, like checking length of lines of code,
+checking if variable names are well-formed according to your coding
+standard, or checking if declared interfaces are truly implemented,
+and much more.
+Additionally, it is possible to write plugins to add your own checks.
+
+%package -n python2-pylint-gui
+Summary:        Graphical Interface tool for Pylint
+Group:          Development/Debuggers
+Requires:       python2-%{name} = %{version}-%{release}
+Requires:       tkinter
+
+%description -n python2-pylint-gui
+This package provides the pylint gui Python modules.
 
 %if 0%{?with_python3}
 %package -n python%{python3_pkgversion}-pylint
@@ -63,26 +107,15 @@ checking if variable names are well-formed according to your coding
 standard, or checking if declared interfaces are truly implemented,
 and much more.
 Additionally, it is possible to write plugins to add your own checks.
-%endif # with_python3
 
-%package gui
-Summary:        Graphical Interface tool for Pylint
-Group:          Development/Debuggers
-Requires:       %{name} = %{version}-%{release}
-Requires:       tkinter
-
-%description gui
-This package provides a gui tool for pylint written in tkinter.
-
-%if 0%{?with_python3}
 %package -n python%{python3_pkgversion}-pylint-gui
 Summary:        Graphical Interface tool for Pylint
 Group:          Development/Debuggers
-Requires:       python%{python3_pkgversion}-pylint = %{version}-%{release}
+Requires:       python%{python3_pkgversion}-%{name} = %{version}-%{release}
 Requires:       python%{python3_pkgversion}-tkinter
 
 %description -n python%{python3_pkgversion}-pylint-gui
-This package provides a gui tool for pylint written in tkinter.
+This package provides the pylint gui Python modules.
 %endif # with_python3
 
 %prep
@@ -101,15 +134,10 @@ This package provides a gui tool for pylint written in tkinter.
 rm -rf %{buildroot}%{python3_sitelib}/pylint/test
 mkdir -pm 755 %{buildroot}%{_mandir}/man1
 install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
-# Add python%{python3_pkgversion}- to the binaries
-for FILE in %{buildroot}%{_bindir}/*; do
-    NAME=$(basename $FILE)
-    mv $FILE %{buildroot}%{_bindir}/python%{python3_pkgversion}-$NAME
-done
-# Add python%{python3_pkgversion}- to the manpages
-for FILE in %{buildroot}%{_mandir}/man1/*; do
-    NAME=$(basename $FILE)
-    mv $FILE %{buildroot}%{_mandir}/man1/python%{python3_pkgversion}-$NAME
+# Add -%{python3_version} to the binaries and manpages
+for NAME in epylint pylint pylint-gui pyreverse symilar; do
+    mv %{buildroot}%{_bindir}/{$NAME,${NAME}-%{python3_version}}
+    mv %{buildroot}%{_mandir}/man1/{${NAME}.1,${NAME}-%{python3_version}.1}
 done
 %endif # with_python3
 
@@ -117,6 +145,21 @@ done
 rm -rf %{buildroot}%{python2_sitelib}/pylint/test
 mkdir -pm 755 %{buildroot}%{_mandir}/man1
 install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
+# Add -%{python2_version} to the binaries and manpages
+for NAME in epylint pylint pylint-gui pyreverse symilar; do
+    mv %{buildroot}%{_bindir}/{$NAME,${NAME}-%{python2_version}}
+    mv %{buildroot}%{_mandir}/man1/{${NAME}.1,${NAME}-%{python2_version}.1}
+done
+
+for NAME in epylint pylint pylint-gui pyreverse symilar; do
+%if 0%{?fedora} >= 26
+    ln -s ${NAME}-%{python3_version} %{buildroot}%{_bindir}/${NAME}
+    ln -s ${NAME}-%{python3_version}.1 %{buildroot}%{_mandir}/man1/${NAME}.1
+%else
+    ln -s ${NAME}-%{python2_version} %{buildroot}%{_bindir}/${NAME}
+    ln -s ${NAME}-%{python2_version}.1 %{buildroot}%{_mandir}/man1/${NAME}.1
+%endif
+done
 
 %check
 export PYTHONPATH=%{buildroot}%{python2_sitelib}
@@ -131,38 +174,56 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %files
 %doc README.rst ChangeLog examples elisp
 %license COPYING
-%{python2_sitelib}/pylint*
-%{_bindir}/*
-%{_mandir}/man?/*
-%exclude %{python2_sitelib}/pylint/gui.py*
-%exclude %{_bindir}/pylint-gui
-%exclude %{_bindir}/python%{python3_pkgversion}-*
-%exclude %{_mandir}/man?/python%{python3_pkgversion}-*
+%{_bindir}/epylint
+%{_bindir}/pylint
+%{_bindir}/pyreverse
+%{_bindir}/symilar
+%{_mandir}/man1/epylint.1*
+%{_mandir}/man1/pylint.1*
+%{_mandir}/man1/pyreverse.1*
+%{_mandir}/man1/symilar.1*
 
 %files gui
-%license COPYING
-%{python2_sitelib}/pylint/gui.py*
 %{_bindir}/pylint-gui
+%{_mandir}/man1/pylint-gui.1*
+
+%files -n python2-pylint
+%doc README.rst ChangeLog examples elisp
+%license COPYING
+%{_bindir}/*-%{python2_version}
+%exclude %{_bindir}/pylint-gui-%{python2_version}
+%{_mandir}/man1/*-%{python2_version}.1*
+%{python2_sitelib}/pylint*
+%exclude %{python2_sitelib}/pylint/gui.py*
+%exclude %{python2_sitelib}/pylint/gui.py*
+
+%files -n python2-pylint-gui
+%{_bindir}/pylint-gui-%{python2_version}
+%{python2_sitelib}/pylint/gui.py*
 
 %if 0%{?with_python3}
 %files -n python%{python3_pkgversion}-pylint
 %doc README.rst ChangeLog examples elisp
 %license COPYING
 %{python3_sitelib}/pylint*
-%{_bindir}/python%{python3_pkgversion}-*
-%{_mandir}/man?/python%{python3_pkgversion}-*
+%{_bindir}/*-%{python3_version}
+%exclude %{_bindir}/pylint-gui-%{python3_version}
+%{_mandir}/man1/*-%{python3_version}.1*
 %exclude %{python3_sitelib}/pylint/gui.py*
 %exclude %{python3_sitelib}/pylint/__pycache__/gui.*
-%exclude %{_bindir}/python%{python3_pkgversion}-pylint-gui
+%exclude %{_bindir}/pylint-gui-%{python3_version}
 
 %files -n python%{python3_pkgversion}-pylint-gui
-%license COPYING
 %{python3_sitelib}/pylint/gui.py*
 %{python3_sitelib}/pylint/__pycache__/gui.*
-%{_bindir}/python%{python3_pkgversion}-pylint-gui
+%{_bindir}/pylint-gui-%{python3_version}
 %endif # with_python3
 
 %changelog
+* Tue Mar 28 2017 Orion Poplawski <orion@cora.nwra.com> - 1.6.5-3
+- Split python2 modules into sub-packages
+- Make python3 the default for scripts on Fedora 26+
+
 * Mon Mar 13 2017 Orion Poplawski <orion@cora.nwra.com> - 1.6.5-2
 - Enable python3 build for EPEL
 - Include python3-pylint-gui __pycache__ files in gui package (bug #1422609)
