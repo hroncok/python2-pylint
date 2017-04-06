@@ -2,7 +2,7 @@
 
 Name:           pylint
 Version:        1.6.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -137,7 +137,9 @@ install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
 # Add -%{python3_version} to the binaries and manpages
 for NAME in epylint pylint pylint-gui pyreverse symilar; do
     mv %{buildroot}%{_bindir}/{$NAME,${NAME}-%{python3_version}}
+    ln -s ${NAME}-%{python3_version} %{buildroot}%{_bindir}/${NAME}-3
     mv %{buildroot}%{_mandir}/man1/{${NAME}.1,${NAME}-%{python3_version}.1}
+    ln -s ${NAME}-%{python3_version}.1 %{buildroot}%{_mandir}/man1/${NAME}-3.1
 done
 %endif # with_python3
 
@@ -148,7 +150,9 @@ install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
 # Add -%{python2_version} to the binaries and manpages
 for NAME in epylint pylint pylint-gui pyreverse symilar; do
     mv %{buildroot}%{_bindir}/{$NAME,${NAME}-%{python2_version}}
+    ln -s ${NAME}-%{python2_version} %{buildroot}%{_bindir}/${NAME}-2
     mv %{buildroot}%{_mandir}/man1/{${NAME}.1,${NAME}-%{python2_version}.1}
+    ln -s ${NAME}-%{python2_version}.1 %{buildroot}%{_mandir}/man1/${NAME}-2.1
 done
 
 for NAME in epylint pylint pylint-gui pyreverse symilar; do
@@ -190,14 +194,18 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %files -n python2-pylint
 %doc README.rst ChangeLog examples elisp
 %license COPYING
+%{_bindir}/*-2
 %{_bindir}/*-%{python2_version}
+%exclude %{_bindir}/pylint-gui-2
 %exclude %{_bindir}/pylint-gui-%{python2_version}
+%{_mandir}/man1/*-2.1*
 %{_mandir}/man1/*-%{python2_version}.1*
 %{python2_sitelib}/pylint*
 %exclude %{python2_sitelib}/pylint/gui.py*
 %exclude %{python2_sitelib}/pylint/gui.py*
 
 %files -n python2-pylint-gui
+%{_bindir}/pylint-gui-2
 %{_bindir}/pylint-gui-%{python2_version}
 %{python2_sitelib}/pylint/gui.py*
 
@@ -206,20 +214,28 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %doc README.rst ChangeLog examples elisp
 %license COPYING
 %{python3_sitelib}/pylint*
+%{_bindir}/*-3
 %{_bindir}/*-%{python3_version}
+%exclude %{_bindir}/pylint-gui-3
 %exclude %{_bindir}/pylint-gui-%{python3_version}
+%{_mandir}/man1/*-3.1*
 %{_mandir}/man1/*-%{python3_version}.1*
 %exclude %{python3_sitelib}/pylint/gui.py*
 %exclude %{python3_sitelib}/pylint/__pycache__/gui.*
+%exclude %{_bindir}/pylint-gui-3
 %exclude %{_bindir}/pylint-gui-%{python3_version}
 
 %files -n python%{python3_pkgversion}-pylint-gui
 %{python3_sitelib}/pylint/gui.py*
 %{python3_sitelib}/pylint/__pycache__/gui.*
+%{_bindir}/pylint-gui-3
 %{_bindir}/pylint-gui-%{python3_version}
 %endif # with_python3
 
 %changelog
+* Wed Apr 5 2017 Orion Poplawski <orion@cora.nwra.com> - 1.6.5-4
+- Provide python major version links (bug #1439070)
+
 * Tue Mar 28 2017 Orion Poplawski <orion@cora.nwra.com> - 1.6.5-3
 - Split python2 modules into sub-packages
 - Make python3 the default for scripts on Fedora 26+
