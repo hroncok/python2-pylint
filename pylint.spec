@@ -1,8 +1,8 @@
 %global with_python3 1
 
 Name:           pylint
-Version:        1.6.5
-Release:        4%{?dist}
+Version:        1.7.1
+Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -233,6 +233,9 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %endif # with_python3
 
 %changelog
+* Sun May 14 2017 Christian Dersch <lupinix@mailbox.org> - 1.7.1-1
+- new version
+
 * Wed Apr 5 2017 Orion Poplawski <orion@cora.nwra.com> - 1.6.5-4
 - Provide python major version links (bug #1439070)
 
