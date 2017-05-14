@@ -113,7 +113,7 @@ rm -rf %{buildroot}%{python3_sitelib}/pylint/test
 mkdir -pm 755 %{buildroot}%{_mandir}/man1
 install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
 # Add -%{python3_version} to the binaries and manpages
-for NAME in epylint pylint pylint-gui pyreverse symilar; do
+for NAME in epylint pylint pyreverse symilar; do
     mv %{buildroot}%{_bindir}/{$NAME,${NAME}-%{python3_version}}
     ln -s ${NAME}-%{python3_version} %{buildroot}%{_bindir}/${NAME}-3
     mv %{buildroot}%{_mandir}/man1/{${NAME}.1,${NAME}-%{python3_version}.1}
