@@ -142,6 +142,8 @@ for NAME in epylint pylint pyreverse symilar; do
     ln -s ${NAME}-%{python2_version}.1 %{buildroot}%{_mandir}/man1/${NAME}.1
 %endif
 done
+# remove pylint-gui manpage, as we have no pylint-gui anymore (removed upstream)
+rm -f %{buildroot}%{_mandir}/man1/pylint-gui*
 
 %check
 export PYTHONPATH=%{buildroot}%{python2_sitelib}
