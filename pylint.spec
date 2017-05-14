@@ -24,6 +24,7 @@ Requires:       python%{python3_pkgversion}-%{name} = %{version}-%{release}
 %else
 Requires:       python2-%{name} = %{version}-%{release}
 %endif
+Obsoletes:      pylint-gui
 
 %description
 Pylint is a Python source code analyzer which looks for programming
@@ -37,18 +38,6 @@ standard, or checking if declared interfaces are truly implemented,
 and much more.
 Additionally, it is possible to write plugins to add your own checks.
 
-%package gui
-Summary:        Graphical Interface tool for Pylint
-Group:          Development/Debuggers
-Requires:       %{name} = %{version}-%{release}
-%if 0%{?fedora} >= 26
-Requires:       python%{python3_pkgversion}-%{name}-gui = %{version}-%{release}
-%else
-Requires:       python2-%{name}-gui = %{version}-%{release}
-%endif
-
-%description gui
-This package provides a gui tool for pylint written in tkinter.
 
 %package -n python2-pylint
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
@@ -61,6 +50,7 @@ Requires:       python2-isort
 Requires:       python2-backports-functools_lru_cache
 Requires:       python2-configparser
 Requires:       python2-pytest-runner
+Obsoletes:      python2-pylint-gui
 
 %description -n python2-pylint
 Pylint is a Python source code analyzer which looks for programming
@@ -74,14 +64,6 @@ standard, or checking if declared interfaces are truly implemented,
 and much more.
 Additionally, it is possible to write plugins to add your own checks.
 
-%package -n python2-pylint-gui
-Summary:        Graphical Interface tool for Pylint
-Group:          Development/Debuggers
-Requires:       python2-%{name} = %{version}-%{release}
-Requires:       tkinter
-
-%description -n python2-pylint-gui
-This package provides the pylint gui Python modules.
 
 %if 0%{?with_python3}
 %package -n python%{python3_pkgversion}-pylint
@@ -99,6 +81,7 @@ Requires:       python%{python3_pkgversion}-six
 Requires:       python%{python3_pkgversion}-mccabe
 Requires:       python%{python3_pkgversion}-isort
 Requires:       python%{python3_pkgversion}-pytest-runner
+Obsoletes:      python%{python3_pkgversion}-pylint-gui
 
 %description -n python%{python3_pkgversion}-pylint
 Pylint is a Python source code analyzer which looks for programming
@@ -111,15 +94,6 @@ checking if variable names are well-formed according to your coding
 standard, or checking if declared interfaces are truly implemented,
 and much more.
 Additionally, it is possible to write plugins to add your own checks.
-
-%package -n python%{python3_pkgversion}-pylint-gui
-Summary:        Graphical Interface tool for Pylint
-Group:          Development/Debuggers
-Requires:       python%{python3_pkgversion}-%{name} = %{version}-%{release}
-Requires:       python%{python3_pkgversion}-tkinter
-
-%description -n python%{python3_pkgversion}-pylint-gui
-This package provides the pylint gui Python modules.
 %endif # with_python3
 
 %prep
@@ -152,14 +126,14 @@ rm -rf %{buildroot}%{python2_sitelib}/pylint/test
 mkdir -pm 755 %{buildroot}%{_mandir}/man1
 install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
 # Add -%{python2_version} to the binaries and manpages
-for NAME in epylint pylint pylint-gui pyreverse symilar; do
+for NAME in epylint pylint pyreverse symilar; do
     mv %{buildroot}%{_bindir}/{$NAME,${NAME}-%{python2_version}}
     ln -s ${NAME}-%{python2_version} %{buildroot}%{_bindir}/${NAME}-2
     mv %{buildroot}%{_mandir}/man1/{${NAME}.1,${NAME}-%{python2_version}.1}
     ln -s ${NAME}-%{python2_version}.1 %{buildroot}%{_mandir}/man1/${NAME}-2.1
 done
 
-for NAME in epylint pylint pylint-gui pyreverse symilar; do
+for NAME in epylint pylint pyreverse symilar; do
 %if 0%{?fedora} >= 26
     ln -s ${NAME}-%{python3_version} %{buildroot}%{_bindir}/${NAME}
     ln -s ${NAME}-%{python3_version}.1 %{buildroot}%{_mandir}/man1/${NAME}.1
@@ -191,27 +165,16 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %{_mandir}/man1/pyreverse.1*
 %{_mandir}/man1/symilar.1*
 
-%files gui
-%{_bindir}/pylint-gui
-%{_mandir}/man1/pylint-gui.1*
 
 %files -n python2-pylint
 %doc README.rst ChangeLog examples elisp
 %license COPYING
 %{_bindir}/*-2
 %{_bindir}/*-%{python2_version}
-%exclude %{_bindir}/pylint-gui-2
-%exclude %{_bindir}/pylint-gui-%{python2_version}
 %{_mandir}/man1/*-2.1*
 %{_mandir}/man1/*-%{python2_version}.1*
 %{python2_sitelib}/pylint*
-%exclude %{python2_sitelib}/pylint/gui.py*
-%exclude %{python2_sitelib}/pylint/gui.py*
 
-%files -n python2-pylint-gui
-%{_bindir}/pylint-gui-2
-%{_bindir}/pylint-gui-%{python2_version}
-%{python2_sitelib}/pylint/gui.py*
 
 %if 0%{?with_python3}
 %files -n python%{python3_pkgversion}-pylint
@@ -220,26 +183,15 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %{python3_sitelib}/pylint*
 %{_bindir}/*-3
 %{_bindir}/*-%{python3_version}
-%exclude %{_bindir}/pylint-gui-3
-%exclude %{_bindir}/pylint-gui-%{python3_version}
 %{_mandir}/man1/*-3.1*
 %{_mandir}/man1/*-%{python3_version}.1*
-%exclude %{python3_sitelib}/pylint/gui.py*
-%exclude %{python3_sitelib}/pylint/__pycache__/gui.*
-%exclude %{_bindir}/pylint-gui-3
-%exclude %{_bindir}/pylint-gui-%{python3_version}
-
-%files -n python%{python3_pkgversion}-pylint-gui
-%{python3_sitelib}/pylint/gui.py*
-%{python3_sitelib}/pylint/__pycache__/gui.*
-%{_bindir}/pylint-gui-3
-%{_bindir}/pylint-gui-%{python3_version}
 %endif # with_python3
 
 %changelog
 * Sun May 14 2017 Christian Dersch <lupinix@mailbox.org> - 1.7.1-1
 - new version
 - we need pytest-runner now
+- pylint-gui has been removed upstream
 
 * Wed Apr 5 2017 Orion Poplawski <orion@cora.nwra.com> - 1.6.5-4
 - Provide python major version links (bug #1439070)
