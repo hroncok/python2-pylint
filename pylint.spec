@@ -17,6 +17,7 @@ BuildRequires:  python-astroid >= 1.4.5
 # For tests
 BuildRequires:  python2-isort
 BuildRequires:  python2-backports-functools_lru_cache
+BuildRequires:  python2-pytest-runner
 # Python 3 is default for Fedora 26+
 %if 0%{?fedora} >= 26
 Requires:       python%{python3_pkgversion}-%{name} = %{version}-%{release}
@@ -59,6 +60,7 @@ Requires:       python2-mccabe
 Requires:       python2-isort
 Requires:       python2-backports-functools_lru_cache
 Requires:       python2-configparser
+Requires:       python2-pytest-runner
 
 %description -n python2-pylint
 Pylint is a Python source code analyzer which looks for programming
@@ -90,11 +92,13 @@ BuildRequires:  python%{python3_pkgversion}-six
 BuildRequires:  python%{python3_pkgversion}-astroid >= 1.4.5
 # For tests
 BuildRequires:  python%{python3_pkgversion}-isort
+BuildRequires:  python%{python3_pkgversion}-pytest-runner
 Requires:       python%{python3_pkgversion}-astroid >= 1.4.5
 Requires:       python%{python3_pkgversion}-setuptools
 Requires:       python%{python3_pkgversion}-six
 Requires:       python%{python3_pkgversion}-mccabe
 Requires:       python%{python3_pkgversion}-isort
+Requires:       python%{python3_pkgversion}-pytest-runner
 
 %description -n python%{python3_pkgversion}-pylint
 Pylint is a Python source code analyzer which looks for programming
@@ -235,6 +239,7 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %changelog
 * Sun May 14 2017 Christian Dersch <lupinix@mailbox.org> - 1.7.1-1
 - new version
+- we need pytest-runner now
 
 * Wed Apr 5 2017 Orion Poplawski <orion@cora.nwra.com> - 1.6.5-4
 - Provide python major version links (bug #1439070)
