@@ -2,12 +2,15 @@
 
 Name:           pylint
 Version:        1.7.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
 URL:            http://www.pylint.org/
 Source0:        https://github.com/PyCQA/pylint/archive/pylint-%{version}.tar.gz
+
+# Fix for rhbz#1483869
+Patch0:         0001-Remove-module-that-wasn-t-actually-moved.-Close-1565.patch
 
 BuildArch:      noarch
 BuildRequires:  python2-devel
@@ -98,6 +101,7 @@ Additionally, it is possible to write plugins to add your own checks.
 
 %prep
 %setup -q -n pylint-pylint-%{version}
+%patch0 -p1
 
 %build
 %py2_build
@@ -190,6 +194,9 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %endif # with_python3
 
 %changelog
+* Thu Aug 31 2017 Brian C. Lane <bcl@redhat.com> - 1.7.2-2
+- Remove module that wasn't actually moved. (#1483869)
+
 * Wed Aug 02 2017 Gwyn Ciesla <limburgher@gmail.com> - 1.7.2-1
 - 1.7.2.
 
