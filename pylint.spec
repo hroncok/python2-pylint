@@ -1,8 +1,8 @@
 %global with_python3 1
 
 Name:           pylint
-Version:        1.7.2
-Release:        2%{?dist}
+Version:        1.7.4
+Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -14,6 +14,8 @@ Patch0:         0001-Remove-module-that-wasn-t-actually-moved.-Close-1565.patch
 
 BuildArch:      noarch
 BuildRequires:  python2-devel
+BuildRequires:  python2-configparser
+BuildRequires:  python2-mccabe
 BuildRequires:  python-setuptools
 BuildRequires:  python-six
 BuildRequires:  python-astroid >= 1.4.5
@@ -77,6 +79,7 @@ BuildRequires:  python%{python3_pkgversion}-six
 BuildRequires:  python%{python3_pkgversion}-astroid >= 1.4.5
 # For tests
 BuildRequires:  python%{python3_pkgversion}-isort
+BuildRequires:  python%{python3_pkgversion}-mccabe
 BuildRequires:  python%{python3_pkgversion}-pytest-runner
 Requires:       python%{python3_pkgversion}-astroid >= 1.4.5
 Requires:       python%{python3_pkgversion}-setuptools
@@ -194,6 +197,10 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %endif # with_python3
 
 %changelog
+* Tue Oct 10 2017 Christian Dersch <lupinix@mailbox.org> - 1.7.4-1
+- new version
+- added BR: python2-configparser, python(2,3)-mccabe for proper test execution
+
 * Thu Aug 31 2017 Brian C. Lane <bcl@redhat.com> - 1.7.2-2
 - Remove module that wasn't actually moved. (#1483869)
 
