@@ -2,7 +2,7 @@
 
 Name:           pylint
 Version:        1.7.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -24,7 +24,7 @@ BuildRequires:  python2-isort
 BuildRequires:  python2-backports-functools_lru_cache
 BuildRequires:  python2-pytest-runner
 # Python 3 is default for Fedora 26+
-%if 0%{?fedora} >= 26
+%if 0%{?fedora} >= 26 || 0%{?rhel} > 7
 Requires:       python%{python3_pkgversion}-%{name} = %{version}-%{release}
 %else
 Requires:       python2-%{name} = %{version}-%{release}
@@ -141,7 +141,7 @@ for NAME in epylint pylint pyreverse symilar; do
 done
 
 for NAME in epylint pylint pyreverse symilar; do
-%if 0%{?fedora} >= 26
+%if 0%{?fedora} >= 26 || 0%{?rhel} > 7
     ln -s ${NAME}-%{python3_version} %{buildroot}%{_bindir}/${NAME}
     ln -s ${NAME}-%{python3_version}.1 %{buildroot}%{_mandir}/man1/${NAME}.1
 %else
@@ -197,6 +197,9 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %endif # with_python3
 
 %changelog
+* Thu Jan 18 2018 Karsten Hopp <karsten@redhat.com> - 1.7.4-2
+- update requirements
+
 * Tue Oct 10 2017 Christian Dersch <lupinix@mailbox.org> - 1.7.4-1
 - new version
 - added BR: python2-configparser, python(2,3)-mccabe for proper test execution
