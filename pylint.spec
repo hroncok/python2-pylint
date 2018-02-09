@@ -2,7 +2,7 @@
 
 Name:           pylint
 Version:        1.7.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -197,6 +197,9 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %endif # with_python3
 
 %changelog
+* Fri Feb 09 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 1.7.4-4
+- Escape macros in %%changelog
+
 * Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.7.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
@@ -266,7 +269,7 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 
 * Thu Dec 10 2015 Brian C. Lane <bcl@redhat.com> 1.5.1-1
 - Upstream v1.5.1
-- Remove %check section, it does not work due to unpackaged requirements.
+- Remove %%check section, it does not work due to unpackaged requirements.
 - Update description from the package's __pkginfo__.py file.
 
 * Tue Nov 10 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.3-4
