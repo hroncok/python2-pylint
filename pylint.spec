@@ -2,7 +2,7 @@
 
 Name:           pylint
 Version:        1.7.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -197,6 +197,9 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %endif # with_python3
 
 %changelog
+* Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.7.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+
 * Thu Jan 18 2018 Karsten Hopp <karsten@redhat.com> - 1.7.4-2
 - update requirements
 
