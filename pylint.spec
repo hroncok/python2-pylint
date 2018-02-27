@@ -1,8 +1,8 @@
 %global with_python3 1
 
 Name:           pylint
-Version:        1.7.4
-Release:        4%{?dist}
+Version:        1.7.5
+Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -10,7 +10,7 @@ URL:            http://www.pylint.org/
 Source0:        https://github.com/PyCQA/pylint/archive/pylint-%{version}.tar.gz
 
 # Fix for rhbz#1483869
-Patch0:         0001-Remove-module-that-wasn-t-actually-moved.-Close-1565.patch
+#Patch0:         0001-Remove-module-that-wasn-t-actually-moved.-Close-1565.patch
 
 BuildArch:      noarch
 BuildRequires:  python2-devel
@@ -104,7 +104,7 @@ Additionally, it is possible to write plugins to add your own checks.
 
 %prep
 %setup -q -n pylint-pylint-%{version}
-%patch0 -p1
+#%patch0 -p1
 
 %build
 %py2_build
@@ -197,6 +197,9 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %endif # with_python3
 
 %changelog
+* Tue Feb 27 2018 Gwyn Ciesla <limburgher@gmail.com> - 1.7.5-1
+- 1.7.5.
+
 * Fri Feb 09 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 1.7.4-4
 - Escape macros in %%changelog
 
