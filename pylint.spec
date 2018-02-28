@@ -2,7 +2,7 @@
 
 Name:           pylint
 Version:        1.7.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -16,9 +16,9 @@ BuildArch:      noarch
 BuildRequires:  python2-devel
 BuildRequires:  python2-configparser
 BuildRequires:  python2-mccabe
-BuildRequires:  python-setuptools
-BuildRequires:  python-six
-BuildRequires:  python-astroid >= 1.4.5
+BuildRequires:  python2-setuptools
+BuildRequires:  python2-six
+BuildRequires:  python2-astroid >= 1.4.5
 # For tests
 BuildRequires:  python2-isort
 BuildRequires:  python2-backports-functools_lru_cache
@@ -47,9 +47,9 @@ Additionally, it is possible to write plugins to add your own checks.
 %package -n python2-pylint
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
-Requires:       python-astroid >= 1.4.5
-Requires:       python-setuptools
-Requires:       python-six
+Requires:       python2-astroid >= 1.4.5
+Requires:       python2-setuptools
+Requires:       python2-six
 Requires:       python2-mccabe
 Requires:       python2-isort
 Requires:       python2-backports-functools_lru_cache
@@ -197,6 +197,10 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %endif # with_python3
 
 %changelog
+* Wed Feb 28 2018 Iryna Shcherbina <ishcherb@redhat.com> - 1.7.5-2
+- Update Python 2 dependency declarations to new packaging standards
+  (See https://fedoraproject.org/wiki/FinalizingFedoraSwitchtoPython3)
+
 * Tue Feb 27 2018 Gwyn Ciesla <limburgher@gmail.com> - 1.7.5-1
 - 1.7.5.
 
