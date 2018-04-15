@@ -1,6 +1,18 @@
+%if 0%{?rhel} > 7
+# disable python2 by default
+%bcond_with python2
+%else
+%bcond_without python2
+%endif
+
+# On all Fedoras, use Python 3 for executables
+# On RHEL > 7, use Python 3 for executables
+# If there is no Python 2 build, use Python 3 for executables
+%global py3_executables (0%{?fedora} || 0%{?rhel} > 7 || %{without python2})
+
 Name:           pylint
 Version:        1.7.5
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -11,18 +23,8 @@ Source0:        https://github.com/PyCQA/pylint/archive/pylint-%{version}.tar.gz
 #Patch0:         0001-Remove-module-that-wasn-t-actually-moved.-Close-1565.patch
 
 BuildArch:      noarch
-BuildRequires:  python2-devel
-BuildRequires:  python2-configparser
-BuildRequires:  python2-mccabe
-BuildRequires:  python2-setuptools
-BuildRequires:  python2-six
-BuildRequires:  python2-astroid >= 1.4.5
-# For tests
-BuildRequires:  python2-isort
-BuildRequires:  python2-backports-functools_lru_cache
-BuildRequires:  python2-pytest-runner
-# Python 3 is default for Fedora 26+
-%if 0%{?fedora} >= 26 || 0%{?rhel} > 7
+
+%if %py3_executables
 Requires:       python%{python3_pkgversion}-%{name} = %{version}-%{release}
 %else
 Requires:       python2-%{name} = %{version}-%{release}
@@ -41,10 +43,20 @@ standard, or checking if declared interfaces are truly implemented,
 and much more.
 Additionally, it is possible to write plugins to add your own checks.
 
-
+%if %{with python2}
 %package -n python2-pylint
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
+BuildRequires:  python2-devel
+BuildRequires:  python2-configparser
+BuildRequires:  python2-mccabe
+BuildRequires:  python2-setuptools
+BuildRequires:  python2-six
+BuildRequires:  python2-astroid >= 1.4.5
+# For tests
+BuildRequires:  python2-isort
+BuildRequires:  python2-backports-functools_lru_cache
+BuildRequires:  python2-pytest-runner
 Requires:       python2-astroid >= 1.4.5
 Requires:       python2-setuptools
 Requires:       python2-six
@@ -66,7 +78,7 @@ checking if variable names are well-formed according to your coding
 standard, or checking if declared interfaces are truly implemented,
 and much more.
 Additionally, it is possible to write plugins to add your own checks.
-
+%endif
 
 %package -n python%{python3_pkgversion}-pylint
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
@@ -103,7 +115,7 @@ Additionally, it is possible to write plugins to add your own checks.
 #%patch0 -p1
 
 %build
-%py2_build
+%{?with_python2:%py2_build}
 %py3_build
 
 %install
@@ -119,6 +131,7 @@ for NAME in epylint pylint pyreverse symilar; do
     ln -s ${NAME}-%{python3_version}.1 %{buildroot}%{_mandir}/man1/${NAME}-3.1
 done
 
+%if %{with python2}
 %py2_install
 rm -rf %{buildroot}%{python2_sitelib}/pylint/test
 mkdir -pm 755 %{buildroot}%{_mandir}/man1
@@ -130,9 +143,10 @@ for NAME in epylint pylint pyreverse symilar; do
     mv %{buildroot}%{_mandir}/man1/{${NAME}.1,${NAME}-%{python2_version}.1}
     ln -s ${NAME}-%{python2_version}.1 %{buildroot}%{_mandir}/man1/${NAME}-2.1
 done
+%endif
 
 for NAME in epylint pylint pyreverse symilar; do
-%if 0%{?fedora} >= 26 || 0%{?rhel} > 7
+%if %py3_executables
     ln -s ${NAME}-%{python3_version} %{buildroot}%{_bindir}/${NAME}
     ln -s ${NAME}-%{python3_version}.1 %{buildroot}%{_mandir}/man1/${NAME}.1
 %else
@@ -144,9 +158,12 @@ done
 rm -f %{buildroot}%{_mandir}/man1/pylint-gui*
 
 %check
+%if %{with python2}
 export PYTHONPATH=%{buildroot}%{python2_sitelib}
-bin/pylint -rn --rcfile=pylintrc --load-plugins=pylint.extensions.docparams, pylint.extensions.mccabe pylint || :
+%{__python2} bin/pylint -rn --rcfile=pylintrc --load-plugins=pylint.extensions.docparams, pylint.extensions.mccabe pylint || :
 %{__python2} -Wi -m unittest discover -s pylint/test || :
+%endif
+
 export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %{__python3} bin/pylint -rn --rcfile=pylintrc --load-plugins=pylint.extensions.docparams, pylint.extensions.mccabe pylint || :
 %{__python3} -Wi -m unittest discover -s pylint/test || :
@@ -163,7 +180,7 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %{_mandir}/man1/pyreverse.1*
 %{_mandir}/man1/symilar.1*
 
-
+%if %{with python2}
 %files -n python2-pylint
 %doc README.rst ChangeLog examples elisp
 %license COPYING
@@ -172,7 +189,7 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %{_mandir}/man1/*-2.1*
 %{_mandir}/man1/*-%{python2_version}.1*
 %{python2_sitelib}/pylint*
-
+%endif
 
 %files -n python%{python3_pkgversion}-pylint
 %doc README.rst ChangeLog examples elisp
@@ -184,6 +201,9 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %{_mandir}/man1/*-%{python3_version}.1*
 
 %changelog
+* Sun Apr 15 2018 Miro Hrončok <mhroncok@redhat.com> - 1.7.5-3
+- Conditionalize python2 subpackage, don't build it on RHEL > 7
+
 * Wed Feb 28 2018 Iryna Shcherbina <ishcherb@redhat.com> - 1.7.5-2
 - Update Python 2 dependency declarations to new packaging standards
   (See https://fedoraproject.org/wiki/FinalizingFedoraSwitchtoPython3)
