@@ -64,6 +64,7 @@ Requires:       python2-backports-functools_lru_cache
 Requires:       python2-configparser
 Requires:       python2-pytest-runner
 Obsoletes:      python2-pylint-gui < 1.7
+%{?python_provide:%python_provide python2-pylint}
 
 %description -n python2-pylint
 Pylint is a Python source code analyzer which looks for programming
@@ -94,6 +95,7 @@ Requires:       python%{python3_pkgversion}-mccabe
 Requires:       python%{python3_pkgversion}-isort
 Requires:       python%{python3_pkgversion}-pytest-runner
 Obsoletes:      python%{python3_pkgversion}-pylint-gui < 1.7
+%{?python_provide:%python_provide python%{python3_pkgversion}-pylint}
 
 %description -n python%{python3_pkgversion}-pylint
 Pylint is a Python source code analyzer which looks for programming
