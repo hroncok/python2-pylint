@@ -1,5 +1,3 @@
-%global with_python3 1
-
 Name:           pylint
 Version:        1.7.5
 Release:        2%{?dist}
@@ -70,7 +68,6 @@ and much more.
 Additionally, it is possible to write plugins to add your own checks.
 
 
-%if 0%{?with_python3}
 %package -n python%{python3_pkgversion}-pylint
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
@@ -100,7 +97,6 @@ checking if variable names are well-formed according to your coding
 standard, or checking if declared interfaces are truly implemented,
 and much more.
 Additionally, it is possible to write plugins to add your own checks.
-%endif # with_python3
 
 %prep
 %setup -q -n pylint-pylint-%{version}
@@ -108,13 +104,9 @@ Additionally, it is possible to write plugins to add your own checks.
 
 %build
 %py2_build
-
-%if 0%{?with_python3}
 %py3_build
-%endif # with_python3
 
 %install
-%if 0%{?with_python3}
 %py3_install
 rm -rf %{buildroot}%{python3_sitelib}/pylint/test
 mkdir -pm 755 %{buildroot}%{_mandir}/man1
@@ -126,7 +118,6 @@ for NAME in epylint pylint pyreverse symilar; do
     mv %{buildroot}%{_mandir}/man1/{${NAME}.1,${NAME}-%{python3_version}.1}
     ln -s ${NAME}-%{python3_version}.1 %{buildroot}%{_mandir}/man1/${NAME}-3.1
 done
-%endif # with_python3
 
 %py2_install
 rm -rf %{buildroot}%{python2_sitelib}/pylint/test
@@ -156,11 +147,9 @@ rm -f %{buildroot}%{_mandir}/man1/pylint-gui*
 export PYTHONPATH=%{buildroot}%{python2_sitelib}
 bin/pylint -rn --rcfile=pylintrc --load-plugins=pylint.extensions.docparams, pylint.extensions.mccabe pylint || :
 %{__python2} -Wi -m unittest discover -s pylint/test || :
-%if 0%{?with_python3}
 export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %{__python3} bin/pylint -rn --rcfile=pylintrc --load-plugins=pylint.extensions.docparams, pylint.extensions.mccabe pylint || :
 %{__python3} -Wi -m unittest discover -s pylint/test || :
-%endif
 
 %files
 %doc README.rst ChangeLog examples elisp
@@ -185,7 +174,6 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %{python2_sitelib}/pylint*
 
 
-%if 0%{?with_python3}
 %files -n python%{python3_pkgversion}-pylint
 %doc README.rst ChangeLog examples elisp
 %license COPYING
@@ -194,7 +182,6 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %{_bindir}/*-%{python3_version}
 %{_mandir}/man1/*-3.1*
 %{_mandir}/man1/*-%{python3_version}.1*
-%endif # with_python3
 
 %changelog
 * Wed Feb 28 2018 Iryna Shcherbina <ishcherb@redhat.com> - 1.7.5-2
