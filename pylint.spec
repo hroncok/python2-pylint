@@ -14,7 +14,6 @@ Name:           pylint
 Version:        1.7.5
 Release:        3%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
-Group:          Development/Debuggers
 License:        GPLv2+
 URL:            http://www.pylint.org/
 Source0:        https://github.com/PyCQA/pylint/archive/pylint-%{version}.tar.gz
@@ -46,7 +45,6 @@ Additionally, it is possible to write plugins to add your own checks.
 %if %{with python2}
 %package -n python2-pylint
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
-Group:          Development/Debuggers
 BuildRequires:  python2-devel
 BuildRequires:  python2-configparser
 BuildRequires:  python2-mccabe
@@ -82,7 +80,6 @@ Additionally, it is possible to write plugins to add your own checks.
 
 %package -n python%{python3_pkgversion}-pylint
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
-Group:          Development/Debuggers
 BuildRequires:  python%{python3_pkgversion}-devel python%{python3_pkgversion}-setuptools python%{python3_pkgversion}-tools
 BuildRequires:  python%{python3_pkgversion}-six
 BuildRequires:  python%{python3_pkgversion}-astroid >= 1.4.5
