@@ -1,50 +1,13 @@
-%if 0%{?rhel} > 7
-# disable python2 by default
-%bcond_with python2
-%else
-%bcond_without python2
-%endif
-
-# On all Fedoras, use Python 3 for executables
-# On RHEL > 7, use Python 3 for executables
-# If there is no Python 2 build, use Python 3 for executables
-%global py3_executables (0%{?fedora} || 0%{?rhel} > 7 || %{without python2})
-
-Name:           pylint
+Name:           python2-pylint
 Version:        1.7.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 License:        GPLv2+
 URL:            http://www.pylint.org/
 Source0:        https://github.com/PyCQA/pylint/archive/pylint-%{version}.tar.gz
 
-# Fix for rhbz#1483869
-#Patch0:         0001-Remove-module-that-wasn-t-actually-moved.-Close-1565.patch
-
 BuildArch:      noarch
 
-%if %py3_executables
-Requires:       python%{python3_pkgversion}-%{name} = %{version}-%{release}
-%else
-Requires:       python2-%{name} = %{version}-%{release}
-%endif
-Obsoletes:      pylint-gui < 1.7
-
-%description
-Pylint is a Python source code analyzer which looks for programming
-errors, helps enforcing a coding standard and sniffs for some code
-smells (as defined in Martin Fowler's Refactoring book).
-Pylint can be seen as another PyChecker since nearly all tests you
-can do with PyChecker can also be done with Pylint. However, Pylint
-offers some more features, like checking length of lines of code,
-checking if variable names are well-formed according to your coding
-standard, or checking if declared interfaces are truly implemented,
-and much more.
-Additionally, it is possible to write plugins to add your own checks.
-
-%if %{with python2}
-%package -n python2-pylint
-Summary:        Analyzes Python code looking for bugs and signs of poor quality
 BuildRequires:  python2-devel
 BuildRequires:  python2-configparser
 BuildRequires:  python2-mccabe
@@ -66,7 +29,7 @@ Requires:       python2-pytest-runner
 Obsoletes:      python2-pylint-gui < 1.7
 %{?python_provide:%python_provide python2-pylint}
 
-%description -n python2-pylint
+%description
 Pylint is a Python source code analyzer which looks for programming
 errors, helps enforcing a coding standard and sniffs for some code
 smells (as defined in Martin Fowler's Refactoring book).
@@ -77,110 +40,38 @@ checking if variable names are well-formed according to your coding
 standard, or checking if declared interfaces are truly implemented,
 and much more.
 Additionally, it is possible to write plugins to add your own checks.
-%endif
 
-%package -n python%{python3_pkgversion}-pylint
-Summary:        Analyzes Python code looking for bugs and signs of poor quality
-BuildRequires:  python%{python3_pkgversion}-devel python%{python3_pkgversion}-setuptools python%{python3_pkgversion}-tools
-BuildRequires:  python%{python3_pkgversion}-six
-BuildRequires:  python%{python3_pkgversion}-astroid >= 1.4.5
-# For tests
-BuildRequires:  python%{python3_pkgversion}-isort
-BuildRequires:  python%{python3_pkgversion}-mccabe
-BuildRequires:  python%{python3_pkgversion}-pytest-runner
-Requires:       python%{python3_pkgversion}-astroid >= 1.4.5
-Requires:       python%{python3_pkgversion}-setuptools
-Requires:       python%{python3_pkgversion}-six
-Requires:       python%{python3_pkgversion}-mccabe
-Requires:       python%{python3_pkgversion}-isort
-Requires:       python%{python3_pkgversion}-pytest-runner
-Obsoletes:      python%{python3_pkgversion}-pylint-gui < 1.7
-%{?python_provide:%python_provide python%{python3_pkgversion}-pylint}
-
-%description -n python%{python3_pkgversion}-pylint
-Pylint is a Python source code analyzer which looks for programming
-errors, helps enforcing a coding standard and sniffs for some code
-smells (as defined in Martin Fowler's Refactoring book).
-Pylint can be seen as another PyChecker since nearly all tests you
-can do with PyChecker can also be done with Pylint. However, Pylint
-offers some more features, like checking length of lines of code,
-checking if variable names are well-formed according to your coding
-standard, or checking if declared interfaces are truly implemented,
-and much more.
-Additionally, it is possible to write plugins to add your own checks.
 
 %prep
 %setup -q -n pylint-pylint-%{version}
-#%patch0 -p1
+
+sed -i 's/\r//g' README.rst
 
 %build
-%{?with_python2:%py2_build}
-%py3_build
+%py2_build
 
 %install
-%py3_install
-rm -rf %{buildroot}%{python3_sitelib}/pylint/test
-mkdir -pm 755 %{buildroot}%{_mandir}/man1
-install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
-# Add -%{python3_version} to the binaries and manpages
-for NAME in epylint pylint pyreverse symilar; do
-    mv %{buildroot}%{_bindir}/{$NAME,${NAME}-%{python3_version}}
-    ln -s ${NAME}-%{python3_version} %{buildroot}%{_bindir}/${NAME}-3
-    mv %{buildroot}%{_mandir}/man1/{${NAME}.1,${NAME}-%{python3_version}.1}
-    ln -s ${NAME}-%{python3_version}.1 %{buildroot}%{_mandir}/man1/${NAME}-3.1
-done
-
-%if %{with python2}
 %py2_install
 rm -rf %{buildroot}%{python2_sitelib}/pylint/test
 mkdir -pm 755 %{buildroot}%{_mandir}/man1
 install -pm 644 man/*.1 %{buildroot}%{_mandir}/man1/
-# Add -%{python2_version} to the binaries and manpages
+# Add -%%{python2_version} to the binaries and manpages
 for NAME in epylint pylint pyreverse symilar; do
     mv %{buildroot}%{_bindir}/{$NAME,${NAME}-%{python2_version}}
     ln -s ${NAME}-%{python2_version} %{buildroot}%{_bindir}/${NAME}-2
     mv %{buildroot}%{_mandir}/man1/{${NAME}.1,${NAME}-%{python2_version}.1}
     ln -s ${NAME}-%{python2_version}.1 %{buildroot}%{_mandir}/man1/${NAME}-2.1
 done
-%endif
 
-for NAME in epylint pylint pyreverse symilar; do
-%if %py3_executables
-    ln -s ${NAME}-%{python3_version} %{buildroot}%{_bindir}/${NAME}
-    ln -s ${NAME}-%{python3_version}.1 %{buildroot}%{_mandir}/man1/${NAME}.1
-%else
-    ln -s ${NAME}-%{python2_version} %{buildroot}%{_bindir}/${NAME}
-    ln -s ${NAME}-%{python2_version}.1 %{buildroot}%{_mandir}/man1/${NAME}.1
-%endif
-done
 # remove pylint-gui manpage, as we have no pylint-gui anymore (removed upstream)
 rm -f %{buildroot}%{_mandir}/man1/pylint-gui*
 
 %check
-%if %{with python2}
 export PYTHONPATH=%{buildroot}%{python2_sitelib}
 %{__python2} bin/pylint -rn --rcfile=pylintrc --load-plugins=pylint.extensions.docparams, pylint.extensions.mccabe pylint || :
 %{__python2} -Wi -m unittest discover -s pylint/test || :
-%endif
-
-export PYTHONPATH=%{buildroot}%{python3_sitelib}
-%{__python3} bin/pylint -rn --rcfile=pylintrc --load-plugins=pylint.extensions.docparams, pylint.extensions.mccabe pylint || :
-%{__python3} -Wi -m unittest discover -s pylint/test || :
 
 %files
-%doc README.rst ChangeLog examples elisp
-%license COPYING
-%{_bindir}/epylint
-%{_bindir}/pylint
-%{_bindir}/pyreverse
-%{_bindir}/symilar
-%{_mandir}/man1/epylint.1*
-%{_mandir}/man1/pylint.1*
-%{_mandir}/man1/pyreverse.1*
-%{_mandir}/man1/symilar.1*
-
-%if %{with python2}
-%files -n python2-pylint
 %doc README.rst ChangeLog examples elisp
 %license COPYING
 %{_bindir}/*-2
@@ -188,18 +79,11 @@ export PYTHONPATH=%{buildroot}%{python3_sitelib}
 %{_mandir}/man1/*-2.1*
 %{_mandir}/man1/*-%{python2_version}.1*
 %{python2_sitelib}/pylint*
-%endif
-
-%files -n python%{python3_pkgversion}-pylint
-%doc README.rst ChangeLog examples elisp
-%license COPYING
-%{python3_sitelib}/pylint*
-%{_bindir}/*-3
-%{_bindir}/*-%{python3_version}
-%{_mandir}/man1/*-3.1*
-%{_mandir}/man1/*-%{python3_version}.1*
 
 %changelog
+* Wed May 16 2018 Miro Hrončok <mhroncok@redhat.com> - 1.7.5-4
+- Split from pylint package
+
 * Sun Apr 15 2018 Miro Hrončok <mhroncok@redhat.com> - 1.7.5-3
 - Conditionalize python2 subpackage, don't build it on RHEL > 7
 
