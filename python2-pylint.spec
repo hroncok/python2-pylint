@@ -1,10 +1,11 @@
 Name:           python2-pylint
-Version:        1.7.5
-Release:        4%{?dist}
+Version:        1.9.0
+%global tag     pylint-1.9
+Release:        1%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 License:        GPLv2+
 URL:            http://www.pylint.org/
-Source0:        https://github.com/PyCQA/pylint/archive/pylint-%{version}.tar.gz
+Source0:        https://github.com/PyCQA/pylint/archive/%{tag}.tar.gz
 
 BuildArch:      noarch
 
@@ -43,7 +44,7 @@ Additionally, it is possible to write plugins to add your own checks.
 
 
 %prep
-%setup -q -n pylint-pylint-%{version}
+%setup -q -n pylint-%{tag}
 
 sed -i 's/\r//g' README.rst
 
@@ -69,7 +70,7 @@ rm -f %{buildroot}%{_mandir}/man1/pylint-gui*
 %check
 export PYTHONPATH=%{buildroot}%{python2_sitelib}
 %{__python2} bin/pylint -rn --rcfile=pylintrc --load-plugins=pylint.extensions.docparams, pylint.extensions.mccabe pylint || :
-%{__python2} -Wi -m unittest discover -s pylint/test || :
+%{__python2} -Wi -m unittest discover -s pylint/test
 
 %files
 %doc README.rst ChangeLog examples elisp
@@ -81,6 +82,9 @@ export PYTHONPATH=%{buildroot}%{python2_sitelib}
 %{python2_sitelib}/pylint*
 
 %changelog
+* Wed May 16 2018 Miro Hrončok <mhroncok@redhat.com> - 1.9.0-1
+- Updated to 1.9.0
+
 * Wed May 16 2018 Miro Hrončok <mhroncok@redhat.com> - 1.7.5-4
 - Split from pylint package
 
